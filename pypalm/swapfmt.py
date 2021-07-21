@@ -17,7 +17,7 @@ def swapfmt(permutation_set):
             idx = np.abs(permutation_set[:, p]).astype(int)
             # if just sign flips
             if np.all(np.ones_like(idx) == idx):
-                Pnew[p] = np.diag(sgn)
+                Pnew.append(np.diag(sgn))
             else:
-                Pnew[p] = np.diag(sgn) @ P[idx - 1, :]
+                Pnew.append(np.diag(sgn) @ P[idx - 1, :])
     return Pnew

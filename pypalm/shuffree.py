@@ -2,7 +2,7 @@ import numpy as np
 from sklearn.utils.validation import check_random_state
 
 from pypalm.d2b import d2b
-from pypalm.factorial import factorial
+from pypalm.logfactorial import logfactorial
 from pypalm.incrbin import incrbin
 from pypalm.nextperm import nextperm
 
@@ -32,7 +32,7 @@ def shufree(design_matrix, perms, conditional_monte_carlo=False,
     U = np.unique(seq)
 
     # logs to help later
-    lfac = factorial(n_subjects)
+    lfac = logfactorial(n_subjects)
 
     maxP = 1
     maxS = 1
@@ -176,9 +176,17 @@ def shufree(design_matrix, perms, conditional_monte_carlo=False,
 
 
 def main():
+    n = 3
+    repeats = 2
+    import math
+    # equation for permutations with repeats
+    manual_perms = math.factorial(n*repeats) / (math.factorial(repeats) ** n)
+    print(f'manually calculated permutations without sign flips: {manual_perms}')
     M = np.random.randint(5, size=(2, 5))
-    M = np.vstack((M, M))
-    A = shufree(M, 56, conditional_monte_carlo=True, is_errors=True)
+    M = np.repeat(M, repeats, axis=0)
+    A = shufree(M, 56, conditional_monte_carlo=False, is_errors=False)
+    function_perms = len(np.unique(A[0], axis=1,return_counts=True)[1])
+    print(f'function calculated permutations without sign flips: {function_perms}')
     from pypalm.swapfmt import swapfmt
     swapfmt(A[0])
     print()
