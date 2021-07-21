@@ -1,9 +1,10 @@
 import numpy as np
-from pypalm.factorial import factorial
-from pypalm.nextperm import nextperm
-from pypalm.d2b import d2b
-from pypalm.incrbin import incrbin
 from sklearn.utils.validation import check_random_state
+
+from pypalm.d2b import d2b
+from pypalm.factorial import factorial
+from pypalm.incrbin import incrbin
+from pypalm.nextperm import nextperm
 
 
 def shufree(design_matrix, perms, conditional_monte_carlo=False,
@@ -27,7 +28,7 @@ def shufree(design_matrix, perms, conditional_monte_carlo=False,
     n_subjects = design_matrix.shape[0]
     _, seq = np.unique(design_matrix, axis=0, return_inverse=True)
     seqS = np.hstack((seq[:, None], np.arange(n_subjects)[:, None])).astype(int)
-    seqS = seqS[np.argsort(seqS[:, 0])]+1
+    seqS = seqS[np.argsort(seqS[:, 0])] + 1
     U = np.unique(seq)
 
     # logs to help later
@@ -68,7 +69,7 @@ def shufree(design_matrix, perms, conditional_monte_carlo=False,
     elif is_errors and not exchangeable_errors:
         whatshuf = 'sign flips only'
     elif exchangeable_errors and is_errors:
-        whatshuf='permutations and sign flips'
+        whatshuf = 'permutations and sign flips'
 
     # ensures at least 1 perm and 1 sign flipping
     permutation_set = seqS[:, 1].copy().astype(int)
@@ -78,7 +79,7 @@ def shufree(design_matrix, perms, conditional_monte_carlo=False,
         # run exhaustively
         print(f'Generating {maxB} shufflings ({whatshuf}).\n')
         if exchangeable_errors:
-            permutation_set = np.hstack((permutation_set[:,np.newaxis], np.zeros((n_subjects, maxP - 1), dtype=int)))
+            permutation_set = np.hstack((permutation_set[:, np.newaxis], np.zeros((n_subjects, maxP - 1), dtype=int)))
             for p in range(1, maxP):
                 seqS = nextperm(seqS)
                 permutation_set[:, p] = seqS[:, 1]
@@ -147,11 +148,11 @@ def shufree(design_matrix, perms, conditional_monte_carlo=False,
         b = 0
         for p in range(permutation_set.shape[1]):
             for s in range(Sset.shape[1]):
-                Bset[:, b] = permutation_set[:,p] * Sset[:, s]
+                Bset[:, b] = permutation_set[:, p] * Sset[:, s]
                 b = b + 1
     else:
         Bset = np.zeros((n_subjects, perms))
-        Bset[:, 0] = np.arange(n_subjects)
+        Bset[:, 0] = np.arange(n_subjects) + 1
         if conditional_monte_carlo:
             for b in range(1, perms):
                 Bset[:, b] = permutation_set[:, random_state.randint(nP)] * Sset[:, random_state.randint(nS)]
@@ -178,6 +179,8 @@ def main():
     M = np.random.randint(5, size=(2, 5))
     M = np.vstack((M, M))
     A = shufree(M, 56, conditional_monte_carlo=True, is_errors=True)
+    from pypalm.swapfmt import swapfmt
+    swapfmt(A[0])
     print()
 
 

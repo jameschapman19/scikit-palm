@@ -13,8 +13,6 @@ class PypalmCCA(PermutationTest):
         self.df = df
 
 
-
-
 def main():
     import numpy as np
     X = np.random.rand(100, 10)

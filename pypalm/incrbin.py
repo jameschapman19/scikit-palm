@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def incrbin(B):
     """
     Increment binary number by 1
@@ -12,6 +13,6 @@ def incrbin(B):
     -------
 
     """
-    k=np.nonzero(~B)[0]
-    B[:k]=~B[:k]
+    k = np.nonzero(~B)[0]
+    B[:k] = ~B[:k]
     return B

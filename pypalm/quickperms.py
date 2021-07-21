@@ -1,8 +1,10 @@
 import numpy as np
-from pypalm.shuffree import shufree
+
 from pypalm.reindex import reindex
-from pypalm.tree import tree
+from pypalm.shuffree import shufree
 from pypalm.shuftree import shuftree
+from pypalm.tree import tree
+
 
 def quickperms(design_matrix=None, exchangeability_blocks=None, perms=100, exchangeable_errors=True,
                is_errors=False, ignore_repeat_rows=False, ignore_repeat_perms=False, return_variance_groups=False):
@@ -26,7 +28,8 @@ def quickperms(design_matrix=None, exchangeability_blocks=None, perms=100, excha
         exchangeability_blocks = reindex(exchangeability_blocks, 'fixleaves')
         permutation_tree = tree(exchangeability_blocks, design_matrix)
 
-        permutation_set = shuftree(permutation_tree,perms,ignore_repeat_perms, exchangeable_errors=exchangeable_errors, is_errors=is_errors)
+        permutation_set = shuftree(permutation_tree, perms, ignore_repeat_perms,
+                                   exchangeable_errors=exchangeable_errors, is_errors=is_errors)
 
     # Define variance groups
     if return_variance_groups:
