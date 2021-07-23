@@ -3,15 +3,16 @@ from sklearn.utils.validation import check_random_state
 
 from pypalm.maxshuf import maxshuf
 from pypalm.swapfmt import swapfmt
+from pypalm.permtree import permtree
+from pypalm.fliptree import fliptree
 
-
-def shuftree(permutation_tree, perms, ignore_repeat_perms=False, exchangeable_errors=True, is_errors=False,
+def shuftree(permutation_tree, perms, conditional_monte_carlo=False, exchangeable_errors=True, is_errors=False,
              random_state=None):
     random_state = check_random_state(random_state)
     maxP = 1
     maxS = 1
     if exchangeable_errors:
-        lmaxP = maxshuf(permutation_tree, 'perms', True)
+        lmaxP = maxshuf(permutation_tree, 'permutations', True)
         maxP = np.exp(lmaxP)
         if np.isinf(maxP):
             print(f'Number of possible permutations is exp({lmaxP}).\n')
@@ -42,14 +43,14 @@ def shuftree(permutation_tree, perms, ignore_repeat_perms=False, exchangeable_er
     elif perms < maxB:
         if exchangeable_errors:
             if perms > maxP:
-                Sset = permtree(permutation_tree, int(np.round(maxP)), ignore_repeat_perms, False, int(np.round(maxP)))
+                Sset = permtree(permutation_tree, int(np.round(maxP)), conditional_monte_carlo, False, int(np.round(maxP)))
             else:
-                Sset = permtree(permutation_tree, perms, ignore_repeat_perms, False, int(np.round(maxP)))
+                Sset = permtree(permutation_tree, perms, conditional_monte_carlo, False, int(np.round(maxP)))
         if is_errors:
             if perms > maxS:
-                Sset = fliptree(permutation_tree, int(np.round(maxS)), ignore_repeat_perms, False, int(np.round(maxS)))
+                Sset = fliptree(permutation_tree, int(np.round(maxS)), conditional_monte_carlo, False, int(np.round(maxS)))
             else:
-                Sset = fliptree(permutation_tree, perms, ignore_repeat_perms, False, int(np.round(maxS)))
+                Sset = fliptree(permutation_tree, perms, conditional_monte_carlo, False, int(np.round(maxS)))
 
     nP = permutation_set.size()
     nS = Sset.size()
@@ -74,7 +75,7 @@ def shuftree(permutation_tree, perms, ignore_repeat_perms=False, exchangeable_er
     else:
         Bset = []
         Bset.append(permutation_set[0] * Sset[0])
-        if ignore_repeat_perms:
+        if conditional_monte_carlo:
             for b in range(1, perms):
                 Bset.append(permutation_set[random_state.randint(nP)] * Sset[random_state.randint(nS)])
         else:

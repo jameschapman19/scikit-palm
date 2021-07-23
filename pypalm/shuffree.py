@@ -7,7 +7,7 @@ from pypalm.incrbin import incrbin
 from pypalm.nextperm import nextperm
 
 
-def shufree(design_matrix, perms, conditional_monte_carlo=False,
+def shuffree(design_matrix, perms, conditional_monte_carlo=False,
             exchangeable_errors=True, is_errors=False, random_state=None):
     """
 
@@ -29,7 +29,7 @@ def shufree(design_matrix, perms, conditional_monte_carlo=False,
     _, seq = np.unique(design_matrix, axis=0, return_inverse=True)
     seqS = np.hstack((seq[:, None], np.arange(n_subjects)[:, None])).astype(int)
     seqS = seqS[np.argsort(seqS[:, 0])] + 1
-    U = np.unique(seq)
+    U = np.unique(seq+1)
 
     # logs to help later
     lfac = logfactorial(n_subjects)
@@ -182,9 +182,9 @@ def main():
     # equation for permutations with repeats
     manual_perms = math.factorial(n*repeats) / (math.factorial(repeats) ** n)
     print(f'manually calculated permutations without sign flips: {manual_perms}')
-    M = np.random.randint(5, size=(2, 5))
+    M = np.random.randint(low=1,high=5, size=(n, 5))
     M = np.repeat(M, repeats, axis=0)
-    A = shufree(M, 56, conditional_monte_carlo=False, is_errors=False)
+    A = shuffree(M,perms=0, conditional_monte_carlo=False, is_errors=False)
     function_perms = len(np.unique(A[0], axis=1,return_counts=True)[1])
     print(f'function calculated permutations without sign flips: {function_perms}')
     from pypalm.swapfmt import swapfmt

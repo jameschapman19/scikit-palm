@@ -3,7 +3,7 @@ import numpy as np
 from pypalm.maxshuf import maxshuf
 
 
-def palm_permtree(permutation_tree, perms, conditional_monte_carlo=False):
+def permtree(permutation_tree, perms, conditional_monte_carlo=False):
     permutation_set = pickperm(permutation_tree, []).T
     permutation_set = np.hstack((permutation_set, np.zeros((len(permutation_set), perms - 1))))
 
@@ -39,12 +39,38 @@ def palm_permtree(permutation_tree, perms, conditional_monte_carlo=False):
 
 
 def nextperm(permutation_tree):
+    nU=len(permutation_tree)
+    sucs=np.zeros(nU)
+
+    if len(permutation_tree[0])>1:
+        for u in range(nU):
+            permutation_tree[u][2],sucs[u]=nextperm(permutation_tree[u][2])
+            if sucs[u]:
+                if u>0:
+                    permutation_tree[:u-1,:]=resetperms(permutation_tree[:u-1])
+                break
+            elif not np.isnan(permutation_tree[u][0]):
+                permutation_tree[u][0][:,2]=np.arange(len(permutation_tree[u][0])).T
+                tmp,sucs[u]=nextperm(permutation_tree[u][0])
+                if sucs[u]:
+                    permutation_tree[u][0]=tmp
+                    permutation_tree[u][2]=resetperms(permutation_tree[u][2])
+                    permutation_tree[u][2]=permutation_tree[u][2][permutation_tree[u][0][:,2]]
+                    if u>0:
+                        permutation_tree[:u-1,:]=resetperms(permutation_tree[:u-1])
     return permutation_tree
 
 
 def resetperms(permutation_tree):
-
-
+    if len(permutation_tree[0])>1:
+        for u in range(len(permutation_tree)):
+            if np.isnan(permutation_tree[u][0]):
+                permutation_tree[u][2]=resetperms(permutation_tree[u][2])
+            else:
+                permutation_tree[u][0][:,2]=permutation_tree[u][0][:,1]
+                permutation_tree[u][0],idx = permutation_tree[u][0][np.argsort(permutation_tree[u][0][:,0])]
+                permutation_tree[u][2]=permutation_tree[u][2][idx]
+                permutation_tree[u][2]=resetperms(permutation_tree[u][2])
 
     return permutation_tree
 

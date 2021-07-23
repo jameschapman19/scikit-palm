@@ -13,11 +13,12 @@ def maxshuf(permutation_tree, stype='permutations', log=False):
         maxp = maxpermnode(permutation_tree, log)
         maxs = maxflipnode(permutation_tree, log)
         maxb = maxp * maxs
+    return maxb
 
 
-def maxpermnode(permutation_tree, log=False):
+def maxpermnode(permutation_tree, nperms, log=False):
     for u in range(len(permutation_tree)):
-        nperms = nperms * seq2nperms(permutation_tree[u][:, 0])
+        nperms = nperms * seq2nperms([permutation_tree[0] for permutation_tree in permutation_tree[u]])
         if len(permutation_tree[u][2]) > 1:
             nperms = maxpermnode(permutation_tree[u], nperms)
     return nperms
