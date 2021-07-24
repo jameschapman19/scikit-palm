@@ -8,6 +8,8 @@ from pypalm.fliptree import fliptree
 
 def shuftree(permutation_tree, perms, conditional_monte_carlo=False, exchangeable_errors=True, is_errors=False,
              random_state=None):
+    permutation_set=None
+    Sset=None
     random_state = check_random_state(random_state)
     maxP = 1
     maxS = 1
@@ -52,8 +54,14 @@ def shuftree(permutation_tree, perms, conditional_monte_carlo=False, exchangeabl
             else:
                 Sset = fliptree(permutation_tree, perms, conditional_monte_carlo, np.round(maxS))
 
-    nP = permutation_set.size()
-    nS = Sset.size()
+    if permutation_set is not None:
+        nP = permutation_set.T.shape[0]
+    else:
+        nP=0
+    if Sset is not None:
+        nS = Sset.T.shape[0]
+    else:
+        nS=0
 
     if nP > 0 and nS == 0:
         Sset = permutation_set
@@ -84,7 +92,7 @@ def shuftree(permutation_tree, perms, conditional_monte_carlo=False, exchangeabl
             pidx, sidx = np.unravel_index(bidx, (nP, nS))
             for b in range(1, perms):
                 Bset.append(np.squeeze(permutation_set[:, pidx[b]] * Sset[:, sidx[b]]))
-    nB = Bset.size()
+    nB = Bset.shape[0]
 
     Bset = swapfmt(Bset)
 
