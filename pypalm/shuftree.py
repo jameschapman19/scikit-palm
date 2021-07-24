@@ -37,20 +37,20 @@ def shuftree(permutation_tree, perms, conditional_monte_carlo=False, exchangeabl
 
     if perms == 0 or perms > maxB:
         if exchangeable_errors:
-            permutation_set = permtree(permutation_tree, int(np.round(maxP)), False, int(np.round(maxP)))
+            permutation_set = permtree(permutation_tree, int(np.round(maxP)), np.round(maxP))
         if is_errors:
-            Sset = fliptree(permutation_tree, int(np.round(maxP)), False, int(np.round(maxP)))
+            Sset = fliptree(permutation_tree, int(np.round(maxP)), np.round(maxP))
     elif perms < maxB:
         if exchangeable_errors:
             if perms > maxP:
-                Sset = permtree(permutation_tree, int(np.round(maxP)), conditional_monte_carlo, False, int(np.round(maxP)))
+                permutation_set = permtree(permutation_tree, int(np.round(maxP)), conditional_monte_carlo, np.round(maxP))
             else:
-                Sset = permtree(permutation_tree, perms, conditional_monte_carlo, False, int(np.round(maxP)))
+                permutation_set = permtree(permutation_tree, perms, conditional_monte_carlo, np.round(maxP))
         if is_errors:
             if perms > maxS:
-                Sset = fliptree(permutation_tree, int(np.round(maxS)), conditional_monte_carlo, False, int(np.round(maxS)))
+                Sset = fliptree(permutation_tree, int(np.round(maxS)), conditional_monte_carlo, np.round(maxS))
             else:
-                Sset = fliptree(permutation_tree, perms, conditional_monte_carlo, False, int(np.round(maxS)))
+                Sset = fliptree(permutation_tree, perms, conditional_monte_carlo, np.round(maxS))
 
     nP = permutation_set.size()
     nS = Sset.size()

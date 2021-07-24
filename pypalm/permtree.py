@@ -1,13 +1,13 @@
 import numpy as np
 
 from pypalm.maxshuf import maxshuf
+import random
 
+def permtree(permutation_tree, perms, conditional_monte_carlo=False, max_perms=np.inf):
+    permutation_set = pickperm(permutation_tree, [])
+    permutation_set = np.hstack((np.array(permutation_set,ndmin=2).T, np.zeros((len(permutation_set), perms - 1))))
 
-def permtree(permutation_tree, perms, conditional_monte_carlo=False):
-    permutation_set = pickperm(permutation_tree, []).T
-    permutation_set = np.hstack((permutation_set, np.zeros((len(permutation_set), perms - 1))))
-
-    maxP = maxshuf(permutation_tree, 'perms')
+    maxP = maxshuf(permutation_tree, 'permutations')
 
     if perms == 1:
         pass
@@ -30,7 +30,7 @@ def permtree(permutation_tree, perms, conditional_monte_carlo=False):
             whiletest = True
             while whiletest:
                 permutation_tree = randomperm(permutation_tree)
-                permutation_set[:, p] = pickperm(permutation_tree, []).T
+                permutation_set[:, p] = pickperm(permutation_tree, [])
                 whiletest = np.any(np.all(permutation_set[:, p] == permutation_set[:, :p - 1]))
 
     idx = np.argsort(permutation_set[:, 0])
@@ -78,13 +78,13 @@ def resetperms(permutation_tree):
 def randomperm(permutation_tree):
     nU = len(permutation_tree)
     for u in range(nU):
-        if not np.isnan(permutation_tree[u][0][0]):
-            tmp = permutation_tree[u][0][:, 0]
-            permutation_tree[u][0] = permutation_tree[u][0][np.random.permutation(len(permutation_tree[u][0]))]
-            if np.any(tmp != permutation_tree[u][0][:, 0]):
-                permutation_tree[u][2] = permutation_tree[u][2][permutation_tree[u][0][:, 2]]
+        if not np.any(np.isnan(permutation_tree[u][0])):
+            tmp = permutation_tree[u][0][0]
+            permutation_tree[u][0] = random.sample(permutation_tree[u][0][0])*3
+            if np.any(tmp != permutation_tree[u][0][0]):
+                permutation_tree[u][2] = [permutation_tree[u][2][k] for k in permutation_tree[u][0][2]]
         if len(permutation_tree[u][2][0]) > 1:
-            permutation_tree[u][2] = randomperm(permutation_tree[u][2])
+            random.shuffle(permutation_tree[u][2])
     return permutation_tree
 
 

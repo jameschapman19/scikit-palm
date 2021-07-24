@@ -42,15 +42,9 @@ def quickperms(design_matrix=None, exchangeability_blocks=None, perms=100, excha
 
 
 def main():
-    n = 10
-    repeats = 2
-    import math
-    # equation for permutations with repeats
-    manual_perms = math.factorial(n * repeats) / (math.factorial(repeats) ** n)
-    print(f'manually calculated permutations without sign flips: {manual_perms}')
-    M = np.random.randint(5, size=(n, 5))
-    M = np.repeat(M, repeats, axis=0)
-    EB = np.random.randint(2, size=(M.shape[0], 1))
+    import pandas as pd
+    EB = pd.read_csv('C:/Users/chapm/OneDrive/Documents/PALM-master/eb.csv',header=None).values
+    M = np.random.normal(5, size=(EB.shape[0], 5))
     A = quickperms(M, EB, 56)
     function_perms = len(np.unique(A[0], axis=1, return_counts=True)[1])
     print(f'function calculated permutations without sign flips: {function_perms}')

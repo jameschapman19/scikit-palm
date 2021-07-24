@@ -1,66 +1,77 @@
 import numpy as np
 from sklearn.preprocessing import OrdinalEncoder
+from sklearn.utils.validation import check_array
 
 
 def reindex(exchangeability_blocks, method='fixleaves'):
-    oe = OrdinalEncoder()
-    exchangeability_blocks = oe.fit_transform(exchangeability_blocks) + 1
-
     if method == 'continuous':
-        exchangeability_blocks_reindexed = renumber(exchangeability_blocks, continuous=True)
-    if method == 'restart':
-        exchangeability_blocks_reindexed = renumber(exchangeability_blocks, continuous=False)
-    if method == 'mixed':
+        exchangeability_blocks_reindexed = np.zeros_like(exchangeability_blocks)
+        for b in range(exchangeability_blocks.shape[1]):
+            cnt = 0
+            if b > 0:
+                for u in np.unique(exchangeability_blocks_reindexed[:, b - 1]):
+                    idx = exchangeability_blocks_reindexed[:, b - 1] == u
+                    exchangeability_blocks_reindexed[idx, b] = np.squeeze(
+                        renumber(exchangeability_blocks[idx, b][:, None], start=cnt, continuous=True)[0])
+                    cnt += len(np.unique(exchangeability_blocks_reindexed[idx, b]))
+            else:
+                exchangeability_blocks_reindexed[:, b][:, None] = \
+                    renumber(exchangeability_blocks[:, b][:, None], start=cnt)[0]
+    elif method == 'restart':
+        exchangeability_blocks_reindexed = renumber(exchangeability_blocks)[0]
+    elif method == 'mixed':
         exchangeability_blocks_reindexed = np.hstack(
-            (renumber(exchangeability_blocks, continuous=True), renumber(exchangeability_blocks, continuous=False)))
-    if method == 'fixleaves':
-        exchangeability_blocks_reindexed = renumber(exchangeability_blocks, continuous=False)
-        exchangeability_blocks_reindexed = np.hstack((exchangeability_blocks_reindexed, (np.arange(exchangeability_blocks_reindexed.shape[0]).T+1)[:,None]))
-        exchangeability_blocks_reindexed = renumber(exchangeability_blocks_reindexed, continuous=False)
-        """
+            (reindex(exchangeability_blocks, method='restart')[:,:-1], reindex(exchangeability_blocks, method='continuous')[:,-1][:,None]))
+    elif method == 'fixleaves':
         exchangeability_blocks_reindexed, addcol = renumber(exchangeability_blocks)
         if addcol:
             exchangeability_blocks_reindexed = np.hstack(
-                (exchangeability_blocks_reindexed, np.arange(exchangeability_blocks_reindexed.shape[1]).T))
-            exchangeability_blocks_reindexed = renumber(exchangeability_blocks_reindexed)
-        """
-    # TODO mixed,restart,continous
+                (exchangeability_blocks_reindexed,
+                 (np.arange(exchangeability_blocks_reindexed.shape[0]).T + 1)[:, None]))
+            exchangeability_blocks_reindexed = renumber(exchangeability_blocks_reindexed)[0]
+    else:
+        raise ValueError('method not implemented')
 
     return exchangeability_blocks_reindexed
 
 
-def renumber(B, start=0, continuous=True):
+def renumber(B, start=0, continuous=False):
     Br = np.zeros_like(B)
     B1 = B[:, 0].copy()
     U = np.unique(B1)
-    for u in U:
-        idx = B1 == u
-        if Br.shape[1] > 1:
-            if continuous:
-                Br[idx, 1:] = renumber(B[idx, 1:], start=start + len(U))
-            else:
-                Br[idx, 1:] = renumber(B[idx, 1:], start=0)
-        Br[idx, 0] = start + u
-    return Br
-
-    """
-    B1 = B[:, 0]
-    U = np.unique(B1)
     addcolvec = np.zeros_like(U)
-    nU = len(U)
-    Br = np.zeros_like(B)
-    for u in range(nU):
-        idx = B1 == U[u]
-        Br[idx, 0] = (u+1)
-        if B.shape[1] > 1:
-            Br[idx, 1:], addcolvec[u] = renumber(B[idx, 1:])
+    for i, u in enumerate(U):
+        idx = B1 == u
+        Br[idx, 0] = (i + 1 + start) * np.sign(u)
+        if Br.shape[1] > 1:
+            Br[idx, 1:], addcolvec[i] = renumber(B[idx, 1:], start=0)
         elif np.sum(idx) > 1:
             addcol = True
-            Br[idx] = -np.abs(B[idx])
+            if continuous:
+                pass
+            else:
+                Br[idx] = -np.abs(B[idx])
         else:
             addcol = False
-
     if B.shape[1] > 1:
         addcol = np.any(addcolvec)
-    """
     return Br, addcol
+
+
+def main():
+    import pandas as pd
+    EB = pd.read_csv('C:/Users/chapm/OneDrive/Documents/PALM-master/eb.csv',header=None).values
+    EB_c = pd.read_csv('C:/Users/chapm/OneDrive/Documents/PALM-master/eb_c.csv',header=None).values
+    EB_r = pd.read_csv('C:/Users/chapm/OneDrive/Documents/PALM-master/eb_r.csv',header=None).values
+    EB_m = pd.read_csv('C:/Users/chapm/OneDrive/Documents/PALM-master/eb_m.csv',header=None).values
+    EB_fl = pd.read_csv('C:/Users/chapm/OneDrive/Documents/PALM-master/eb_fl.csv',header=None).values
+
+    ebf = reindex(EB)
+    ebr = reindex(EB, method='restart')
+    ebc = reindex(EB, method='continuous')
+    ebm = reindex(EB, method='mixed')
+    print()
+
+
+if __name__ == "__main__":
+    main()
