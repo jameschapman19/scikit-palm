@@ -13,13 +13,8 @@ def incrbin(B):
     -------
 
     """
-    k = np.where(np.logical_not(B))[0][0]
-    B[:k+1] = np.logical_not(B[:k+1])
+    B=B.copy()
+    for b in B:
+        k = np.where(np.logical_not(np.flip(b)))[0][0]
+        b[-(k+1):] = np.logical_not(b[-(k+1):])
     return B
-
-def main():
-    binary_num=np.array([1,0,1])
-    print(incrbin(binary_num))
-
-if __name__ == '__main__':
-    main()

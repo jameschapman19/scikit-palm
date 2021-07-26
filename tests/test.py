@@ -13,6 +13,11 @@ class Test(TestCase):
         pass
 
     def test_binary(self):
-        dec=121
-        bin=d2b(dec,5)
+        bin_dim=5
+        dec=[25,26]
+        dec_plus_one=[e+1 for e in dec]
+        bin=d2b(dec,bin_dim)
+        bin_plus_one=incrbin(bin)
+        assert(bin.shape[1]==5,'maximum dimensionality of binary representation not equal to {bin_dim}')
+        assert np.array_equal(bin_plus_one,d2b(dec_plus_one,bin_dim))
 
