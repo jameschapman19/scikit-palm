@@ -29,45 +29,45 @@ def maxshuf(permutation_tree, stype='permutations', log=False):
 
 def maxpermnode(permutation_tree, nperms):
     for u in range(len(permutation_tree)):
-        if not np.all(np.isnan(permutation_tree[u][0])):
+        if permutation_tree[u][0] is not None and not np.any(np.isnan(permutation_tree[u][0])):
             nperms = nperms * seq2nperms(permutation_tree[u][0][0])
         else:
             nperms = nperms * 1
-        if len(permutation_tree[u][2][0]) > 1:
+        if permutation_tree[u][2] is not None and len(permutation_tree[u][2][0]) > 1:
             nperms = maxpermnode(permutation_tree[u][2], nperms)
     return nperms
 
 
-def maxflipnode(permutation_tree, nsignflips):
+def maxflipnode(permutation_tree, nflips):
     for u in range(len(permutation_tree)):
         if len(permutation_tree[u][2]) > 1:
-            nsignflips = maxflipnode(permutation_tree[u][2], nsignflips)
-        nsignflips = nsignflips * 2 ** len(permutation_tree[u][1])
-    return nsignflips
+            nflips = maxflipnode(permutation_tree[u][2], nflips)
+        nflips = nflips * 2 ** len(permutation_tree[u][1])
+    return nflips
 
 
 def lmaxpermnode(permutation_tree, nperms):
     for u in range(len(permutation_tree)):
-        if not np.all(np.isnan(permutation_tree[u][0])):
+        if permutation_tree[u][0] is not None and not np.any(np.isnan(permutation_tree[u][0])):
             nperms = nperms + lseq2nperms(permutation_tree[u][0][0])
         else:
-            nperms = nperms + 1
-        if len(permutation_tree[u][2][0]) > 1:
+            nperms = nperms
+        if permutation_tree[u][2] is not None and len(permutation_tree[u][2][0]) > 1:
             nperms = lmaxpermnode(permutation_tree[u][2], nperms)
     return nperms
 
 
-def lmaxflipnode(permutation_tree, nsignflips):
+def lmaxflipnode(permutation_tree, nflips):
     for u in range(len(permutation_tree)):
         if len(permutation_tree[u][2][0]) > 1:
-            nsignflips = lmaxflipnode(permutation_tree[u][2], nsignflips)
-        nsignflips = nsignflips + len(permutation_tree[u][1])
-    return nsignflips
+            nflips = lmaxflipnode(permutation_tree[u][2], nflips)
+        nflips = nflips + len(permutation_tree[u][1])
+    return nflips
 
 
 def seq2nperms(S):
-    if isinstance(S, (int, np.integer)):
-        S = [S]
+    if isinstance(S, (float, int, np.integer)):
+        S = [int(S)]
     U = np.unique(S)
     nU = len(U)
     cnt = np.zeros_like(U)

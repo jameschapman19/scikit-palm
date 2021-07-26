@@ -45,12 +45,10 @@ def main():
     import pandas as pd
     EB = pd.read_csv('C:/Users/chapm/OneDrive/Documents/PALM-master/eb.csv',header=None).values
     M = np.random.normal(5, size=(EB.shape[0], 5))
-    A = quickperms(M, EB, 56)
+    A = quickperms(M, EB, 1698, ignore_repeat_perms=False)
     function_perms = len(np.unique(A[0], axis=1, return_counts=True)[1])
     print(f'function calculated permutations without sign flips: {function_perms}')
-    from pypalm.swapfmt import swapfmt
-    swapfmt(A[0])
-    print()
+
 
 
 if __name__ == "__main__":

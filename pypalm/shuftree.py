@@ -92,9 +92,7 @@ def shuftree(permutation_tree, perms, conditional_monte_carlo=False, exchangeabl
             pidx, sidx = np.unravel_index(bidx, (nP, nS))
             for b in range(1, perms):
                 Bset.append(np.squeeze(permutation_set[:, pidx[b]] * Sset[:, sidx[b]]))
-    nB = Bset.shape[0]
-
-    Bset = swapfmt(Bset)
+    nB = Bset.shape[1]
 
     # TODO metric
     mtr = np.zeros(9)

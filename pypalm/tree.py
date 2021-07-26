@@ -10,7 +10,7 @@ def tree(exchangeability_blocks, design_matrix=None):
     O = np.arange(design_matrix.shape[0])
 
     wholeblock = np.all(exchangeability_blocks[0] > 0)
-    permutation_tree = [[None] * 3]
+    permutation_tree = [[None]*3]
     permutation_tree[0][0], permutation_tree[0][2] = maketree(exchangeability_blocks[:, 1:], design_matrix, O,
                                                               wholeblock, wholeblock)
     if wholeblock:
@@ -23,9 +23,9 @@ def maketree(exchangeability_blocks, design_matrix, O, wholeblock=False, nosf=Fa
     U = np.unique(B1)
     nU = len(U)
     if exchangeability_blocks.shape[1] > 1:
-        permutation_tree = [[None] * 3 for _ in range(nU)]
+        permutation_tree = [[None]*3 for _ in range(3) for _ in range(nU)]
     else:
-        permutation_tree = [[None] for _ in range(nU)]
+        permutation_tree = [[None]*1 for _ in range(nU)]
 
     for u in range(nU):
         idx = B1 == U[u]
@@ -33,11 +33,11 @@ def maketree(exchangeability_blocks, design_matrix, O, wholeblock=False, nosf=Fa
         if exchangeability_blocks.shape[1] > 1:
             wholeblockb = exchangeability_blocks[np.where(idx)[0][0], 0] > 0
             permutation_tree[u][0], permutation_tree[u][2] = maketree(exchangeability_blocks[idx, 1:],
-                                                                      design_matrix[idx, :], O[idx], wholeblockb,
-                                                                      wholeblock or nosf)
+                                                                          design_matrix[idx, :], O[idx], wholeblockb,
+                                                                          wholeblock or nosf)
             permutation_tree[u][1] = np.array([])
             if nosf:
-                permutation_tree[u][1] = []
+                permutation_tree[u][1] = np.array([])
             elif len(permutation_tree[u][2]) > 1:
                 if isinstance(permutation_tree[u][0], np.ndarray):
                     if np.isnan(permutation_tree[u][0][0]):
