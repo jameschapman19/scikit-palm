@@ -1,5 +1,6 @@
 import random
 import warnings
+from copy import deepcopy
 
 import numpy as np
 
@@ -7,6 +8,7 @@ from pypalm.maxshuf import maxshuf
 
 
 def permtree(permutation_tree, perms, conditional_monte_carlo=False, max_perms=np.inf):
+    permutation_tree = deepcopy(permutation_tree)
     permutation_set = pickperm(permutation_tree, [])
     permutation_set = np.hstack((np.array(permutation_set, ndmin=2).T, np.zeros((len(permutation_set), perms - 1))))
 
