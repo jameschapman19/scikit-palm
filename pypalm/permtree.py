@@ -7,28 +7,29 @@ import numpy as np
 from pypalm.maxshuf import maxshuf
 
 
-def permtree(permutation_tree, perms, conditional_monte_carlo=False, max_perms=np.inf):
+def permtree(permutation_tree, perms, conditional_monte_carlo=False, max_perms=None):
     permutation_tree = deepcopy(permutation_tree)
     permutation_set = pickperm(permutation_tree, [])
     permutation_set = np.hstack((np.array(permutation_set, ndmin=2).T, np.zeros((len(permutation_set), perms - 1))))
 
-    maxP = maxshuf(permutation_tree, 'permutations')
+    if max_perms is None:
+        max_perms = maxshuf(permutation_tree, 'permutations')
 
     if perms == 1:
         pass
-    elif perms == 0 or perms == maxP:
+    elif perms == 0 or perms == max_perms:
         if perms > 1e5:
-            warnings.warn(f'Number of possible sign flips is {maxP}. Performing all exhaustively')
-        for p in range(1, maxP):
+            warnings.warn(f'Number of possible sign flips is {max_perms}. Performing all exhaustively')
+        for p in range(1, max_perms):
             permutation_tree = nextperm(permutation_tree)
             permutation_set[:, p] = pickperm(permutation_tree, [])
-    elif conditional_monte_carlo or perms > maxP:
-        for p in range(1, maxP):
+    elif conditional_monte_carlo or perms > max_perms:
+        for p in range(1, max_perms):
             permutation_tree = randomperm(permutation_tree)
             permutation_set[:, p] = pickperm(permutation_tree, [])
     else:
-        if perms > maxP / 2:
-            warnings.warn(f'The maximum number of sign flips {maxP} is not much larger than'
+        if perms > max_perms / 2:
+            warnings.warn(f'The maximum number of sign flips {max_perms} is not much larger than'
                           f'the number you chose to run {perms}. This means it may take a while - '
                           f'from a few seconds to several minutes. To find non-repeated sign flips'
                           f'consider instead running exhaustively')

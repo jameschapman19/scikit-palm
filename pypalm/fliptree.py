@@ -7,32 +7,33 @@ from pypalm.incrbin import incrbin
 from pypalm.maxshuf import maxshuf
 
 
-def fliptree(permutation_tree, perms, conditional_monte_carlo=False, max_perms=np.inf):
+def fliptree(permutation_tree, flips, conditional_monte_carlo=False, max_flips=np.inf):
     permutation_tree = deepcopy(permutation_tree)
     permutation_set = pickflip(permutation_tree, [], np.ones(len(permutation_tree)))
-    permutation_set = np.hstack((np.array(permutation_set, ndmin=2), np.zeros((len(permutation_set), perms - 1))))
+    permutation_set = np.hstack((np.array(permutation_set, ndmin=2), np.zeros((len(permutation_set), flips - 1))))
 
-    maxP = maxshuf(permutation_tree, 'flips')
+    if max_flips is None:
+        max_flips = maxshuf(permutation_tree, 'flips')
 
-    if perms == 1:
+    if flips == 1:
         pass
-    elif perms == 0 or perms == maxP:
-        if perms > 1e5:
-            warnings.warn(f'Number of possible sign flips is {maxP}. Performing all exhaustively')
-        for p in range(1, maxP):
+    elif flips == 0 or flips == max_flips:
+        if flips > 1e5:
+            warnings.warn(f'Number of possible sign flips is {max_flips}. Performing all exhaustively')
+        for p in range(1, max_flips):
             permutation_tree = nextflip(permutation_tree)
             permutation_set[:, p] = pickflip(permutation_tree, [])
-    elif conditional_monte_carlo or perms > maxP:
-        for p in range(1, maxP):
+    elif conditional_monte_carlo or flips > max_flips:
+        for p in range(1, max_flips):
             permutation_tree = randomflip(permutation_tree)
             permutation_set[:, p] = pickflip(permutation_tree, [])
     else:
-        if perms > maxP / 2:
-            warnings.warn(f'The maximum number of sign flips {maxP} is not much larger than'
-                          f'the number you chose to run {perms}. This means it may take a while - '
+        if flips > max_flips / 2:
+            warnings.warn(f'The maximum number of sign flips {max_flips} is not much larger than'
+                          f'the number you chose to run {flips}. This means it may take a while - '
                           f'from a few seconds to several minutes. To find non-repeated sign flips'
                           f'consider instead running exhaustively')
-        for p in range(1, perms):
+        for p in range(1, flips):
             whiletest = True
             while whiletest:
                 permutation_tree = randomflip(permutation_tree)
