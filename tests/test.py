@@ -1,7 +1,6 @@
 from unittest import TestCase
 import numpy as np
-from pypalm.d2b import d2b
-from pypalm.incrbin import incrbin
+from pypalm.utils.binary import d2b,incrbin
 
 
 class Test(TestCase):

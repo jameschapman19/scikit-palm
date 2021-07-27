@@ -1,6 +1,6 @@
 import numpy as np
 
-from pypalm.reindex import reindex
+from pypalm.utils.reindex import reindex
 from pypalm.shuffree import shuffree
 from pypalm.shuftree import shuftree
 from pypalm.tree import tree
@@ -33,7 +33,7 @@ def quickperms(design_matrix=None, exchangeability_blocks=None, perms=100, excha
     # Define variance groups
     if return_variance_groups:
         if simple:
-            variance_groups = np.ones(n_subjects, 1)
+            variance_groups = np.ones(n_subjects)
         else:
             pass
             # variance_groups = ptree2vg(Ptree)

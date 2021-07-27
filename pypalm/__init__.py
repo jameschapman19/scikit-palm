@@ -1,1 +1,2 @@
 from pypalm.quickperms import quickperms
+from pypalm.permutation_test import permutation_test

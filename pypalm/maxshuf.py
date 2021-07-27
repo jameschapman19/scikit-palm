@@ -2,8 +2,7 @@ import math
 
 import numpy as np
 
-from pypalm.logfactorial import logfactorial
-
+from pypalm.utils.logfactorial import logfactorial
 vector_factorial = np.vectorize(math.factorial)
 
 

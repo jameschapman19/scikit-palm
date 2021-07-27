@@ -3,7 +3,7 @@ from sklearn.utils.validation import check_random_state
 
 from pypalm.d2b import d2b
 from pypalm.incrbin import incrbin
-from pypalm.logfactorial import logfactorial
+from pypalm.utils.logfactorial import logfactorial
 from pypalm.nextperm import nextperm
 
 

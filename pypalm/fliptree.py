@@ -3,7 +3,7 @@ from copy import deepcopy
 
 import numpy as np
 
-from pypalm.incrbin import incrbin
+from pypalm.utils.binary import incrbin
 from pypalm.maxshuf import maxshuf
 
 
