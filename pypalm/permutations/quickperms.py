@@ -1,9 +1,8 @@
 import numpy as np
-
 from pypalm.utils.reindex import reindex
-from pypalm.permutations.utils.shuffree import shuffree
-from pypalm.permutations.utils.shuftree import shuftree
-from pypalm.permutations.utils.tree import tree
+from .utils.shuffree import shuffree
+from .utils.shuftree import shuftree
+from .utils.tree import tree
 
 
 def quickperms(design_matrix=None, exchangeability_blocks=None, perms=100, exchangeable_errors=True,
@@ -39,17 +38,3 @@ def quickperms(design_matrix=None, exchangeability_blocks=None, perms=100, excha
             # variance_groups = ptree2vg(Ptree)
         return permutation_set, variance_groups
     return permutation_set
-
-
-def main():
-    import pandas as pd
-    np.random.seed(42)
-    EB = pd.read_csv('C:/Users/chapm/OneDrive/Documents/PALM-master/eb.csv', header=None).values
-    M = np.random.normal(5, size=(EB.shape[0], 5))
-    A = quickperms(M, EB, 75, ignore_repeat_perms=False, exchangeable_errors=False, is_errors=True)
-    function_perms = len(np.unique(A[0], axis=1, return_counts=True)[1])
-    print(f'function calculated permutations without sign flips: {function_perms}')
-
-
-if __name__ == "__main__":
-    main()

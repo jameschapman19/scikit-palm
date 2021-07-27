@@ -1,1 +1,2 @@
-from pypalm.permutations.quickperms import quickperms
+from pypalm import permutations
+from pypalm import permutation_tests

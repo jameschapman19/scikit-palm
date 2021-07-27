@@ -1,0 +1,1 @@
+from .quickperms import quickperms
