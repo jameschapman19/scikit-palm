@@ -3,9 +3,9 @@ from copy import deepcopy
 import numpy as np
 from sklearn.utils.validation import check_random_state
 
-from pypalm.fliptree import fliptree
-from pypalm.maxshuf import maxshuf
-from pypalm.permtree import permtree
+from pypalm.permutations.utils.fliptree import fliptree
+from pypalm.permutations.utils.maxshuf import maxshuf
+from pypalm.permutations.utils.permtree import permtree
 
 
 def shuftree(permutation_tree, perms, conditional_monte_carlo=False, exchangeable_errors=True, is_errors=False,

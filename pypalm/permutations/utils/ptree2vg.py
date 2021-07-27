@@ -1,6 +1,6 @@
 import numpy as np
 
-from pypalm.permtree import permtree
+from pypalm.permutations.utils.permtree import permtree
 
 
 def ptree2vg(permutation_tree):

@@ -4,7 +4,7 @@ from sklearn.utils.validation import check_random_state
 from pypalm.d2b import d2b
 from pypalm.incrbin import incrbin
 from pypalm.utils.logfactorial import logfactorial
-from pypalm.nextperm import nextperm
+from pypalm.permutations.utils.nextperm import nextperm
 
 
 def shuffree(design_matrix, perms, conditional_monte_carlo=False,

@@ -1,9 +1,9 @@
 import numpy as np
 
 from pypalm.utils.reindex import reindex
-from pypalm.shuffree import shuffree
-from pypalm.shuftree import shuftree
-from pypalm.tree import tree
+from pypalm.permutations.utils.shuffree import shuffree
+from pypalm.permutations.utils.shuftree import shuftree
+from pypalm.permutations.utils.tree import tree
 
 
 def quickperms(design_matrix=None, exchangeability_blocks=None, perms=100, exchangeable_errors=True,

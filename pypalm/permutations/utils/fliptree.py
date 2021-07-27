@@ -4,7 +4,7 @@ from copy import deepcopy
 import numpy as np
 
 from pypalm.utils.binary import incrbin
-from pypalm.maxshuf import maxshuf
+from pypalm.permutations.utils.maxshuf import maxshuf
 
 
 def fliptree(permutation_tree, flips, conditional_monte_carlo=False, max_flips=np.inf):
