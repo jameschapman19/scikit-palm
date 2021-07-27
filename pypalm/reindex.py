@@ -1,6 +1,4 @@
 import numpy as np
-from sklearn.preprocessing import OrdinalEncoder
-from sklearn.utils.validation import check_array
 
 
 def reindex(exchangeability_blocks, method='fixleaves'):
@@ -21,7 +19,8 @@ def reindex(exchangeability_blocks, method='fixleaves'):
         exchangeability_blocks_reindexed = renumber(exchangeability_blocks)[0]
     elif method == 'mixed':
         exchangeability_blocks_reindexed = np.hstack(
-            (reindex(exchangeability_blocks, method='restart')[:,:-1], reindex(exchangeability_blocks, method='continuous')[:,-1][:,None]))
+            (reindex(exchangeability_blocks, method='restart')[:, :-1],
+             reindex(exchangeability_blocks, method='continuous')[:, -1][:, None]))
     elif method == 'fixleaves':
         exchangeability_blocks_reindexed, addcol = renumber(exchangeability_blocks)
         if addcol:
@@ -60,11 +59,11 @@ def renumber(B, start=0, continuous=False):
 
 def main():
     import pandas as pd
-    EB = pd.read_csv('C:/Users/chapm/OneDrive/Documents/PALM-master/eb.csv',header=None).values
-    EB_c = pd.read_csv('C:/Users/chapm/OneDrive/Documents/PALM-master/eb_c.csv',header=None).values
-    EB_r = pd.read_csv('C:/Users/chapm/OneDrive/Documents/PALM-master/eb_r.csv',header=None).values
-    EB_m = pd.read_csv('C:/Users/chapm/OneDrive/Documents/PALM-master/eb_m.csv',header=None).values
-    EB_fl = pd.read_csv('C:/Users/chapm/OneDrive/Documents/PALM-master/eb_fl.csv',header=None).values
+    EB = pd.read_csv('C:/Users/chapm/OneDrive/Documents/PALM-master/eb.csv', header=None).values
+    EB_c = pd.read_csv('C:/Users/chapm/OneDrive/Documents/PALM-master/eb_c.csv', header=None).values
+    EB_r = pd.read_csv('C:/Users/chapm/OneDrive/Documents/PALM-master/eb_r.csv', header=None).values
+    EB_m = pd.read_csv('C:/Users/chapm/OneDrive/Documents/PALM-master/eb_m.csv', header=None).values
+    EB_fl = pd.read_csv('C:/Users/chapm/OneDrive/Documents/PALM-master/eb_fl.csv', header=None).values
 
     ebf = reindex(EB)
     ebr = reindex(EB, method='restart')

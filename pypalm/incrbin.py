@@ -13,8 +13,8 @@ def incrbin(B):
     -------
 
     """
-    B=B.copy()
+    B = B.copy()
     for b in B:
         k = np.where(np.logical_not(np.flip(b)))[0][0]
-        b[-(k+1):] = np.logical_not(b[-(k+1):])
+        b[-(k + 1):] = np.logical_not(b[-(k + 1):])
     return B

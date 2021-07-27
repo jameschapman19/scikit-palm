@@ -1,8 +1,11 @@
-import numpy as np
-from pypalm.logfactorial import logfactorial
 import math
 
-vector_factorial=np.vectorize(math.factorial)
+import numpy as np
+
+from pypalm.logfactorial import logfactorial
+
+vector_factorial = np.vectorize(math.factorial)
+
 
 def maxshuf(permutation_tree, stype='permutations', log=False):
     if log:
@@ -45,7 +48,7 @@ def maxflipnode(permutation_tree, nflips):
         if permutation_tree[u][0] is not None and not np.any(np.isnan(permutation_tree[u][0])):
             nflips = nflips * 2 ** len(permutation_tree[u][1])
         else:
-            nflips=nflips
+            nflips = nflips
     return nflips
 
 
@@ -65,7 +68,7 @@ def lmaxflipnode(permutation_tree, nflips):
         if permutation_tree[u][2] is not None and len(permutation_tree[u][2][0]) > 1:
             nflips = lmaxflipnode(permutation_tree[u][2], nflips)
         if permutation_tree[u][1] is None:
-            nflips=nflips
+            nflips = nflips
         else:
             nflips = nflips + len(permutation_tree[u][1])
     return nflips

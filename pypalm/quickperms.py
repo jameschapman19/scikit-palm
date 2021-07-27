@@ -44,12 +44,11 @@ def quickperms(design_matrix=None, exchangeability_blocks=None, perms=100, excha
 def main():
     import pandas as pd
     np.random.seed(42)
-    EB = pd.read_csv('C:/Users/chapm/OneDrive/Documents/PALM-master/eb.csv',header=None).values
+    EB = pd.read_csv('C:/Users/chapm/OneDrive/Documents/PALM-master/eb.csv', header=None).values
     M = np.random.normal(5, size=(EB.shape[0], 5))
     A = quickperms(M, EB, 1698, ignore_repeat_perms=False, is_errors=True)
     function_perms = len(np.unique(A[0], axis=1, return_counts=True)[1])
     print(f'function calculated permutations without sign flips: {function_perms}')
-
 
 
 if __name__ == "__main__":

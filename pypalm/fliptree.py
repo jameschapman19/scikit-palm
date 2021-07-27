@@ -1,14 +1,14 @@
-import numpy as np
+import warnings
 
 import numpy as np
 
 from pypalm.incrbin import incrbin
 from pypalm.maxshuf import maxshuf
-import warnings
+
 
 def fliptree(permutation_tree, perms, conditional_monte_carlo=False, max_perms=np.inf):
     permutation_set = pickflip(permutation_tree, [])
-    permutation_set = np.hstack((np.array(permutation_set,ndmin=2).T, np.zeros((len(permutation_set), perms - 1))))
+    permutation_set = np.hstack((np.array(permutation_set, ndmin=2).T, np.zeros((len(permutation_set), perms - 1))))
 
     maxP = maxshuf(permutation_tree, 'flips')
 
@@ -43,35 +43,35 @@ def fliptree(permutation_tree, perms, conditional_monte_carlo=False, max_perms=n
 
 
 def nextflip(permutation_tree):
-    nU=len(permutation_tree)
+    nU = len(permutation_tree)
 
     for u in range(nU):
         if permutation_tree[u][1] is None:
             if permutation_tree[u][2] is not None and len(permutation_tree[u][2][0]) > 1:
-                permutation_tree[u][2],incremented=nextflip(permutation_tree[u][2])
+                permutation_tree[u][2], incremented = nextflip(permutation_tree[u][2])
                 if incremented:
-                    if u>0:
-                        permutation_tree[:u-1]=resetflips(permutation_tree[:u-1])
+                    if u > 0:
+                        permutation_tree[:u - 1] = resetflips(permutation_tree[:u - 1])
                     break
         else:
-            if sum(permutation_tree[u][1]<permutation_tree[u][1].size):
-                permutation_tree[u][1]=incrbin(permutation_tree[u][1])
+            if sum(permutation_tree[u][1] < permutation_tree[u][1].size):
+                permutation_tree[u][1] = incrbin(permutation_tree[u][1])
                 incremented = True
-                if u>0:
-                    permutation_tree[:u-1]=resetflips(permutation_tree[:u-1])
+                if u > 0:
+                    permutation_tree[:u - 1] = resetflips(permutation_tree[:u - 1])
                 break
             else:
-                incremented=False
+                incremented = False
     return permutation_tree, incremented
 
 
 def resetflips(permutation_tree):
     for u in range(len(permutation_tree)):
-        if permutation_tree[u][1] is not None and len(permutation_tree[u][2][0])>1:
-            permutation_tree[u][2]=resetflips(permutation_tree[u][2])
+        if permutation_tree[u][1] is not None and len(permutation_tree[u][2][0]) > 1:
+            permutation_tree[u][2] = resetflips(permutation_tree[u][2])
         else:
-            permutation_tree[u][1]=np.zeros(len(permutation_tree
-                                            [u][1]))
+            permutation_tree[u][1] = np.zeros(len(permutation_tree
+                                                  [u][1]))
     return permutation_tree
 
 
@@ -79,18 +79,27 @@ def randomflip(permutation_tree):
     nU = len(permutation_tree)
     for u in range(nU):
         if permutation_tree[u][2] is not None and len(permutation_tree[u][2][0]) > 1:
-            permutation_tree[u][2]=randomflip(permutation_tree[u][2])
+            permutation_tree[u][2] = randomflip(permutation_tree[u][2])
         else:
-            permutation_tree[u][1]=np.random.rand(len(permutation_tree[u][2][0]))>0.5
+            permutation_tree[u][1] = np.random.rand(len(permutation_tree[u][2][0])) > 0.5
     return permutation_tree
 
 
-def pickflip(permutation_tree, P):
+def pickflip(permutation_tree, P, sgn):
     nU = len(permutation_tree)
     if len(permutation_tree[0]) == 3:
         for u in range(nU):
-            P = pickflip(permutation_tree[u][2], P)
+            if permutation_tree[u][1] is None:
+                bidx = np.ones(len(permutation_tree[u][2]))
+            else:
+                bidx = np.logical_not(permutation_tree[u][1])
+                bidx[permutation_tree[u][1]] = -1
+            P = pickflip(permutation_tree[u][2], P, bidx)
     elif len(permutation_tree[0]) == 1:
         for u in range(nU):
-            P[len(P):len(P) + len(permutation_tree[u][0])] = permutation_tree[u][0]
+            if sgn.size==1:
+                v=1
+            else:
+                v=u
+            P[len(P)] = np.sign(v)*np.ones(len(permutation_tree[u]))
     return P

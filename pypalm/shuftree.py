@@ -8,8 +8,8 @@ from pypalm.permtree import permtree
 
 def shuftree(permutation_tree, perms, conditional_monte_carlo=False, exchangeable_errors=True, is_errors=False,
              random_state=None):
-    permutation_set=None
-    Sset=None
+    permutation_set = None
+    Sset = None
     random_state = check_random_state(random_state)
     maxP = 1
     maxS = 1
@@ -45,7 +45,8 @@ def shuftree(permutation_tree, perms, conditional_monte_carlo=False, exchangeabl
     elif perms < maxB:
         if exchangeable_errors:
             if perms > maxP:
-                permutation_set = permtree(permutation_tree, int(np.round(maxP)), conditional_monte_carlo, np.round(maxP))
+                permutation_set = permtree(permutation_tree, int(np.round(maxP)), conditional_monte_carlo,
+                                           np.round(maxP))
             else:
                 permutation_set = permtree(permutation_tree, perms, conditional_monte_carlo, np.round(maxP))
         if is_errors:
@@ -57,11 +58,11 @@ def shuftree(permutation_tree, perms, conditional_monte_carlo=False, exchangeabl
     if permutation_set is not None:
         nP = permutation_set.T.shape[0]
     else:
-        nP=0
+        nP = 0
     if Sset is not None:
         nS = Sset.T.shape[0]
     else:
-        nS=0
+        nS = 0
 
     if nP > 0 and nS == 0:
         Sset = permutation_set
@@ -92,7 +93,7 @@ def shuftree(permutation_tree, perms, conditional_monte_carlo=False, exchangeabl
             pidx, sidx = np.unravel_index(bidx, (nP, nS))
             for b in range(1, perms):
                 Bset.append(np.squeeze(permutation_set[:, pidx[b]] * Sset[:, sidx[b]]))
-        Bset=np.array(Bset)
+        Bset = np.array(Bset)
     nB = Bset.shape[1]
 
     # TODO metric
