@@ -14,7 +14,9 @@ def tree(exchangeability_blocks, design_matrix=None):
     permutation_tree[0][0], permutation_tree[0][2] = maketree(exchangeability_blocks[:, 1:], design_matrix, O,
                                                               wholeblock, wholeblock)
     if wholeblock:
-        permutation_tree[1] = np.zeros((len(permutation_tree[2]), 1))
+        permutation_tree[0][1] = np.zeros((len(permutation_tree[2]), 1))
+    else:
+        permutation_tree[0][1] = np.array([])
     return permutation_tree
 
 
@@ -34,7 +36,7 @@ def maketree(exchangeability_blocks, design_matrix, O, wholeblock=False, nosf=Fa
             wholeblockb = exchangeability_blocks[np.where(idx)[0][0], 0] > 0
             permutation_tree[u][0], permutation_tree[u][2] = maketree(exchangeability_blocks[idx, 1:],
                                                                           design_matrix[idx, :], O[idx], wholeblockb,
-                                                                          wholeblock or nosf)
+                                                                          wholeblockb or nosf)
             permutation_tree[u][1] = np.array([])
             if nosf:
                 permutation_tree[u][1] = np.array([])

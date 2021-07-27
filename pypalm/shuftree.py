@@ -1,10 +1,10 @@
 import numpy as np
 from sklearn.utils.validation import check_random_state
 
-from pypalm.maxshuf import maxshuf
-from pypalm.swapfmt import swapfmt
-from pypalm.permtree import permtree
 from pypalm.fliptree import fliptree
+from pypalm.maxshuf import maxshuf
+from pypalm.permtree import permtree
+
 
 def shuftree(permutation_tree, perms, conditional_monte_carlo=False, exchangeable_errors=True, is_errors=False,
              random_state=None):
@@ -82,7 +82,7 @@ def shuftree(permutation_tree, perms, conditional_monte_carlo=False, exchangeabl
                 Bset.append(permutation_set[p] * Sset[s])
     else:
         Bset = []
-        Bset.append(permutation_set[0] * Sset[0])
+        Bset.append(permutation_set.T[0] * Sset.T[0])
         if conditional_monte_carlo:
             for b in range(1, perms):
                 Bset.append(permutation_set[random_state.randint(nP)] * Sset[random_state.randint(nS)])
@@ -92,6 +92,7 @@ def shuftree(permutation_tree, perms, conditional_monte_carlo=False, exchangeabl
             pidx, sidx = np.unravel_index(bidx, (nP, nS))
             for b in range(1, perms):
                 Bset.append(np.squeeze(permutation_set[:, pidx[b]] * Sset[:, sidx[b]]))
+        Bset=np.array(Bset)
     nB = Bset.shape[1]
 
     # TODO metric
