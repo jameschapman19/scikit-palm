@@ -46,7 +46,7 @@ def main():
     np.random.seed(42)
     EB = pd.read_csv('C:/Users/chapm/OneDrive/Documents/PALM-master/eb.csv', header=None).values
     M = np.random.normal(5, size=(EB.shape[0], 5))
-    A = quickperms(M, EB, 15, ignore_repeat_perms=False, is_errors=True)
+    A = quickperms(M, EB, 1500, ignore_repeat_perms=False, is_errors=True)
     function_perms = len(np.unique(A[0], axis=1, return_counts=True)[1])
     print(f'function calculated permutations without sign flips: {function_perms}')
 
