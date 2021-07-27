@@ -6,7 +6,7 @@ from pypalm.maxshuf import maxshuf
 
 
 def fliptree(permutation_tree, perms, conditional_monte_carlo=False, max_perms=np.inf):
-    permutation_set = pickflip(permutation_tree, []).T
+    permutation_set = pickflip(permutation_tree, [])
     permutation_set = np.hstack((permutation_set, np.zeros((len(permutation_set), perms - 1))))
 
     maxP = maxshuf(permutation_tree, 'perms')

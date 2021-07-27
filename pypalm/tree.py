@@ -23,9 +23,9 @@ def maketree(exchangeability_blocks, design_matrix, O, wholeblock=False, nosf=Fa
     U = np.unique(B1)
     nU = len(U)
     if exchangeability_blocks.shape[1] > 1:
-        permutation_tree = [[None]*3 for _ in range(3) for _ in range(nU)]
+        permutation_tree = [[None]*3 for _ in range(nU)]
     else:
-        permutation_tree = [[None]*1 for _ in range(nU)]
+        permutation_tree = [[None] for _ in range(nU)]
 
     for u in range(nU):
         idx = B1 == U[u]

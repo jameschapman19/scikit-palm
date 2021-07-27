@@ -59,9 +59,12 @@ def lmaxpermnode(permutation_tree, nperms):
 
 def lmaxflipnode(permutation_tree, nflips):
     for u in range(len(permutation_tree)):
-        if len(permutation_tree[u][2][0]) > 1:
+        if permutation_tree[u][2] is not None and len(permutation_tree[u][2][0]) > 1:
             nflips = lmaxflipnode(permutation_tree[u][2], nflips)
-        nflips = nflips + len(permutation_tree[u][1])
+        if permutation_tree[u][1] is None:
+            nflips=nflips
+        else:
+            nflips = nflips + len(permutation_tree[u][1])
     return nflips
 
 
