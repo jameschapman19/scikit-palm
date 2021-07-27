@@ -85,10 +85,10 @@ def shuftree(permutation_tree, perms, conditional_monte_carlo=False, exchangeabl
         b = 0
         for p in range(permutation_set.shape[1]):
             for s in range(Sset.shape[1]):
-                Bset[:,b] = permutation_set[p] * Sset[s]
+                Bset[:, b] = permutation_set[p] * Sset[s]
                 b += 1
     else:
-        Bset[:,0] = permutation_set[:,0] * Sset[:,0]
+        Bset[:, 0] = permutation_set[:, 0] * Sset[:, 0]
         if conditional_monte_carlo:
             for b in range(1, perms):
                 Bset[b] = permutation_set[random_state.randint(nP)] * Sset[random_state.randint(nS)]
@@ -97,7 +97,7 @@ def shuftree(permutation_tree, perms, conditional_monte_carlo=False, exchangeabl
             bidx = bidx[:perms]
             pidx, sidx = np.unravel_index(bidx, (nP, nS))
             for b in range(1, perms):
-                Bset[:,b] = permutation_set[:, pidx[b]] * Sset[:, sidx[b]]
+                Bset[:, b] = permutation_set[:, pidx[b]] * Sset[:, sidx[b]]
     nB = Bset.shape[1]
 
     # TODO metric

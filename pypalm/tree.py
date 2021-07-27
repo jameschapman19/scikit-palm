@@ -7,7 +7,7 @@ def tree(exchangeability_blocks, design_matrix=None):
 
     Bs = exchangeability_blocks[np.argsort(exchangeability_blocks[:, 0])]
 
-    O = np.arange(1,design_matrix.shape[0]+1)
+    O = np.arange(1, design_matrix.shape[0] + 1)
 
     wholeblock = np.all(exchangeability_blocks[0] > 0)
     permutation_tree = [[None] * 3]
@@ -55,8 +55,8 @@ def maketree(exchangeability_blocks, design_matrix, O, wholeblock=False, nosf=Fa
         Ms = design_matrix[np.argsort(B1)]
         _, S = np.unique(np.reshape(Ms.T, (int(Ms.size / nU), nU)).T, axis=0, return_inverse=True)
         idx = np.argsort(S)
-        S = S[idx]+1
-        S = [S, np.arange(1,S.size+1), np.arange(1,S.size+1)]
+        S = S[idx] + 1
+        S = [S, np.arange(1, S.size + 1), np.arange(1, S.size + 1)]
         permutation_tree = [permutation_tree[idx_] for idx_ in idx]
 
     elif wholeblock and nU == 1:
