@@ -18,7 +18,7 @@ class Test(TestCase):
         dec_plus_one = [e + 1 for e in dec]
         bin = d2b(dec, bin_dim)
         bin_plus_one = incrbin(bin)
-        assert (bin.shape[1] == 5, 'maximum dimensionality of binary representation not equal to {bin_dim}')
+        assert (bin.shape[1] == 5), 'maximum dimensionality of binary representation not equal to {bin_dim}'
         assert np.array_equal(bin_plus_one, d2b(dec_plus_one, bin_dim))
 
     def test_reindex(self):
