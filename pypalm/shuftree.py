@@ -38,6 +38,8 @@ def shuftree(permutation_tree, perms, conditional_monte_carlo=False, exchangeabl
         whatshuf = 'permutations and sign flips'
 
     if perms == 0 or perms > maxB:
+        # run exhaustively
+        print(f'Generating {maxB} shufflings ({whatshuf}).\n')
         if exchangeable_errors:
             permutation_set = permtree(permutation_tree, int(np.round(maxP)), np.round(maxP))
         if is_errors:

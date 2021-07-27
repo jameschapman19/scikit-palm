@@ -7,7 +7,7 @@ from pypalm.maxshuf import maxshuf
 
 
 def fliptree(permutation_tree, perms, conditional_monte_carlo=False, max_perms=np.inf):
-    permutation_set = pickflip(permutation_tree, [])
+    permutation_set = pickflip(permutation_tree, [], np.ones(len(permutation_tree)))
     permutation_set = np.hstack((np.array(permutation_set, ndmin=2).T, np.zeros((len(permutation_set), perms - 1))))
 
     maxP = maxshuf(permutation_tree, 'flips')
@@ -89,7 +89,7 @@ def pickflip(permutation_tree, P, sgn):
     nU = len(permutation_tree)
     if len(permutation_tree[0]) == 3:
         for u in range(nU):
-            if permutation_tree[u][1] is None:
+            if permutation_tree[u][1] is None or len(permutation_tree[u][1])==0:
                 bidx = np.ones(len(permutation_tree[u][2]))
             else:
                 bidx = np.logical_not(permutation_tree[u][1])
@@ -97,9 +97,9 @@ def pickflip(permutation_tree, P, sgn):
             P = pickflip(permutation_tree[u][2], P, bidx)
     elif len(permutation_tree[0]) == 1:
         for u in range(nU):
-            if sgn.size==1:
-                v=1
+            if sgn.size == 1:
+                v = 1
             else:
-                v=u
-            P[len(P)] = np.sign(v)*np.ones(len(permutation_tree[u]))
+                v = u
+            P[len(P)] = np.sign(v) * np.ones(len(permutation_tree[u]))
     return P
