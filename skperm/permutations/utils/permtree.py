@@ -4,7 +4,7 @@ from copy import deepcopy
 
 import numpy as np
 
-from pypalm.permutations.utils.maxshuf import maxshuf
+from skperm.permutations.utils.maxshuf import maxshuf
 
 
 def permtree(permutation_tree, perms, conditional_monte_carlo=False, max_perms=None):

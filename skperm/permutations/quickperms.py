@@ -1,5 +1,5 @@
 import numpy as np
-from pypalm.utils.reindex import reindex
+from skperm.utils.reindex import reindex
 from .utils.shuffree import shuffree
 from .utils.shuftree import shuftree
 from .utils.tree import tree

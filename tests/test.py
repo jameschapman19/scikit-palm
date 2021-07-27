@@ -1,7 +1,7 @@
 from unittest import TestCase
 import numpy as np
-from pypalm.utils.binary import d2b, incrbin
-from pypalm.utils.reindex import reindex
+from skperm.utils.binary import d2b, incrbin
+from skperm.utils.reindex import reindex
 
 
 class Test(TestCase):

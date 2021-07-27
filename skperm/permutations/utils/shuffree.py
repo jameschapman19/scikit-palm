@@ -1,9 +1,9 @@
 import numpy as np
 from sklearn.utils.validation import check_random_state
 
-from pypalm.utils.binary import d2b, incrbin
-from pypalm.utils.logfactorial import logfactorial
-from pypalm.permutations.utils.nextperm import nextperm
+from skperm.utils.binary import d2b, incrbin
+from skperm.utils.logfactorial import logfactorial
+from skperm.permutations.utils.nextperm import nextperm
 
 
 def shuffree(design_matrix, perms, conditional_monte_carlo=False,
@@ -186,7 +186,7 @@ def main():
     A = shuffree(M, perms=0, conditional_monte_carlo=False, is_errors=False)
     function_perms = len(np.unique(A[0], axis=1, return_counts=True)[1])
     print(f'function calculated permutations without sign flips: {function_perms}')
-    from pypalm.swapfmt import swapfmt
+    from skperm.swapfmt import swapfmt
     swapfmt(A[0])
     print()
 
