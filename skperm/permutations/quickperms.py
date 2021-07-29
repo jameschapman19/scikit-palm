@@ -1,4 +1,5 @@
 import numpy as np
+
 from skperm.utils.reindex import reindex
 from .utils.shuffree import shuffree
 from .utils.shuftree import shuftree

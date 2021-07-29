@@ -3,8 +3,8 @@ from copy import deepcopy
 
 import numpy as np
 
-from skperm.utils.binary import incrbin
 from skperm.permutations.utils.maxshuf import maxshuf
+from skperm.utils.binary import incrbin
 
 
 def fliptree(permutation_tree, flips, conditional_monte_carlo=False, max_flips=np.inf):

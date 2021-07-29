@@ -1,9 +1,9 @@
 import numpy as np
 from sklearn.utils.validation import check_random_state
 
+from skperm.permutations.utils.nextperm import nextperm
 from skperm.utils.binary import d2b, incrbin
 from skperm.utils.logfactorial import logfactorial
-from skperm.permutations.utils.nextperm import nextperm
 
 
 def shuffree(design_matrix, perms, conditional_monte_carlo=False,
@@ -42,7 +42,7 @@ def shuffree(design_matrix, perms, conditional_monte_carlo=False,
         for u in range(len(U)):
             nrep[u] = np.sum(seqS[:, 0] == U[u])
         lmaxP = lfac[n_subjects] - np.sum(lfac[nrep])
-        maxP = int(np.round(np.exp(lmaxP)))
+        maxP = np.round(np.exp(lmaxP))
         if U.size == n_subjects:
             if np.isinf(maxP):
                 print(f'Number of possible permutations is exp({lmaxP}) = {n_subjects}!.\n')
