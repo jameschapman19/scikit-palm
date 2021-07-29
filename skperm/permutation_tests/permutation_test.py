@@ -114,7 +114,7 @@ class PermutationTest:
                                         fit_params=self.fit_params)
         permutation_scores = Parallel(n_jobs=self.n_jobs, verbose=self.verbose)(
             delayed(_permutation_test_score)(
-                clone(self.estimator), X, y[permutations[:, p] - 1] * np.sign(permutations[:, p]),
+                clone(self.estimator), X, y[np.abs(permutations[:, p]) - 1] * np.sign(permutations[:, p]),
                 groups, cv, scorer, fit_params=self.fit_params)
             for p in range(self.n_permutations))
         permutation_scores = np.array(permutation_scores)
