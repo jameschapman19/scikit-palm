@@ -9,6 +9,7 @@ from sklearn.utils.metaestimators import _safe_split
 from sklearn.utils.validation import _check_fit_params
 from skperm.permutations import quickperms
 
+
 def _permutation_test_score(estimator, X, y, groups, cv, scorer,
                             fit_params):
     """Auxiliary function for permutation_test_score"""
@@ -132,13 +133,13 @@ class PermutationTest:
 def main():
     import numpy as np
     import pandas as pd
-    EB = pd.read_csv('/skperm/tests/data/eb.csv', header=None).values
+    EB = pd.read_csv('../tests/data/eb.csv', header=None).values
     X = np.random.rand(EB.shape[0], 5)
     y = np.random.randint(5, size=EB.shape[0])
     from sklearn.linear_model import LogisticRegression
     lr = LogisticRegression()
     blah = PermutationTest(lr)
-    blah.score(X, y)
+    a = blah.score(X, y)
     print()
 
 
