@@ -1,5 +1,7 @@
-from .permutation_test import PermutationTest
-
+from sklearn.utils.metaestimators import _safe_split
+from sklearn.utils.validation import _check_fit_params
+import numpy as np
+from permutation_test import PermutationTest
 
 # TODO
 class CCAPermutationTest(PermutationTest):
@@ -27,6 +29,21 @@ class CCAPermutationTest(PermutationTest):
         if self.roy_iii:
             self.metrics['roy_iii'] = _roy_iii()
 
+    @staticmethod
+    def _permutation_test_score(estimator, X, y, groups, cv, scorer,
+                                fit_params):
+        """Auxiliary function for permutation_test_score"""
+        # Adjust length of sample weights
+        fit_params = fit_params if fit_params is not None else {}
+        avg_score = []
+        for train, test in cv.split(X, y, groups):
+            X_train, y_train = _safe_split(estimator, X, y, train)
+            X_test, y_test = _safe_split(estimator, X, y, test, train)
+            fit_params = _check_fit_params(X, fit_params, train)
+            estimator.fit(X_train, y_train, **fit_params)
+            avg_score.append(scorer(estimator, X_test, y_test))
+        return np.mean(avg_score)
+
 
 def _wilks():
     # TODO
@@ -51,3 +68,20 @@ def _roy_ii():
 def _roy_iii():
     # TODO
     pass
+
+
+def main():
+    import numpy as np
+    import pandas as pd
+    from sklearn.cross_decomposition import CCA
+    EB = pd.read_csv('../tests/data/eb.csv', header=None).values
+    X = np.random.rand(EB.shape[0], 5)
+    y = np.random.normal(size=(EB.shape[0], 5))
+    cca = CCA(n_components=3)
+    blah = PermutationTest(cca)
+    a = blah.score(X, y)
+    print()
+
+
+if __name__ == '__main__':
+    main()

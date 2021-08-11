@@ -7,22 +7,7 @@ from sklearn.utils import indexable, check_random_state, _safe_indexing
 from sklearn.utils.fixes import delayed
 from sklearn.utils.metaestimators import _safe_split
 from sklearn.utils.validation import _check_fit_params
-from skperm.permutations import quickperms
-
-
-def _permutation_test_score(estimator, X, y, groups, cv, scorer,
-                            fit_params):
-    """Auxiliary function for permutation_test_score"""
-    # Adjust length of sample weights
-    fit_params = fit_params if fit_params is not None else {}
-    avg_score = []
-    for train, test in cv.split(X, y, groups):
-        X_train, y_train = _safe_split(estimator, X, y, train)
-        X_test, y_test = _safe_split(estimator, X, y, test, train)
-        fit_params = _check_fit_params(X, fit_params, train)
-        estimator.fit(X_train, y_train, **fit_params)
-        avg_score.append(scorer(estimator, X_test, y_test))
-    return np.mean(avg_score)
+from ..permutations.quickperms import quickperms
 
 
 class PermutationTest:
@@ -103,10 +88,10 @@ class PermutationTest:
 
         # We clone the estimator to make sure that all the folds are
         # independent, and that it is pickle-able.
-        score = _permutation_test_score(clone(self.estimator), X, y, groups, cv, scorer,
+        score = self._permutation_test_score(clone(self.estimator), X, y, groups, cv, scorer,
                                         fit_params=self.fit_params)
         permutation_scores = Parallel(n_jobs=self.n_jobs, verbose=self.verbose)(
-            delayed(_permutation_test_score)(
+            delayed(self._permutation_test_score)(
                 clone(self.estimator), X, y[np.abs(permutations[:, p]) - 1] * np.sign(permutations[:, p]),
                 groups, cv, scorer, fit_params=self.fit_params)
             for p in range(self.n_permutations))
@@ -128,6 +113,21 @@ class PermutationTest:
                 this_mask = (groups == group)
                 indices[this_mask] = random_state.permutation(indices[this_mask])
         return _safe_indexing(y, indices)
+
+    @staticmethod
+    def _permutation_test_score(estimator, X, y, groups, cv, scorer,
+                                fit_params):
+        """Auxiliary function for permutation_test_score"""
+        # Adjust length of sample weights
+        fit_params = fit_params if fit_params is not None else {}
+        avg_score = []
+        for train, test in cv.split(X, y, groups):
+            X_train, y_train = _safe_split(estimator, X, y, train)
+            X_test, y_test = _safe_split(estimator, X, y, test, train)
+            fit_params = _check_fit_params(X, fit_params, train)
+            estimator.fit(X_train, y_train, **fit_params)
+            avg_score.append(scorer(estimator, X_test, y_test))
+        return np.mean(avg_score)
 
 
 def main():
