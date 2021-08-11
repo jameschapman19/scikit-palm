@@ -7,15 +7,7 @@ from sklearn.utils import indexable, check_random_state, _safe_indexing
 from sklearn.utils.fixes import delayed
 from sklearn.utils.metaestimators import _safe_split
 from sklearn.utils.validation import _check_fit_params
-
 from skperm.permutations import quickperms
-
-
-# Author: Alexandre Gramfort <alexandre.gramfort@inria.fr>
-#         Gael Varoquaux <gael.varoquaux@normalesup.org>
-#         Olivier Grisel <olivier.grisel@ensta.org>
-#         Raghav RV <rvraghav93@gmail.com>
-# License: BSD 3 clause
 
 def _permutation_test_score(estimator, X, y, groups, cv, scorer,
                             fit_params):
@@ -68,7 +60,7 @@ class PermutationTest:
             The verbosity level.
         fit_params : dict, default=None
             Parameters to pass to the fit method of the estimator.
-            .. versionadded:: 0.24
+
         Returns
         -------
         score : float
@@ -147,6 +139,7 @@ def main():
     lr = LogisticRegression()
     blah = PermutationTest(lr)
     blah.score(X, y)
+    print()
 
 
 if __name__ == '__main__':
