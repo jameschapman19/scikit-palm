@@ -23,6 +23,7 @@ class Test(TestCase):
 
     def test_reindex(self):
         import pandas as pd
+        print(os.listdir())
         EB = pd.read_csv('../data/eb.csv', header=None).values
         EB_c = pd.read_csv('../data/eb_c.csv', header=None).values
         EB_r = pd.read_csv('../data/eb_r.csv', header=None).values
