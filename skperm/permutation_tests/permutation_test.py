@@ -140,7 +140,7 @@ class PermutationTest:
 def main():
     import numpy as np
     import pandas as pd
-    EB = pd.read_csv('C:/Users/chapm/PycharmProjects/scikit-perm/tests/data/eb.csv', header=None).values
+    EB = pd.read_csv('/skperm/tests/data/eb.csv', header=None).values
     X = np.random.rand(EB.shape[0], 5)
     y = np.random.randint(5, size=EB.shape[0])
     from sklearn.linear_model import LogisticRegression

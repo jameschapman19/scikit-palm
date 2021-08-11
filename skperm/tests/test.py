@@ -23,11 +23,11 @@ class Test(TestCase):
 
     def test_reindex(self):
         import pandas as pd
-        EB = pd.read_csv('../tests/data/eb.csv', header=None).values
-        EB_c = pd.read_csv('../tests/data/eb_c.csv', header=None).values
-        EB_r = pd.read_csv('../tests/data/eb_r.csv', header=None).values
-        EB_m = pd.read_csv('../tests/data/eb_m.csv', header=None).values
-        EB_fl = pd.read_csv('../tests/data/eb_fl.csv', header=None).values
+        EB = pd.read_csv('data/eb.csv', header=None).values
+        EB_c = pd.read_csv('data/eb_c.csv', header=None).values
+        EB_r = pd.read_csv('data/eb_r.csv', header=None).values
+        EB_m = pd.read_csv('data/eb_m.csv', header=None).values
+        EB_fl = pd.read_csv('data/eb_fl.csv', header=None).values
 
         eb_fl = reindex(EB)
         eb_r = reindex(EB, method='restart')
