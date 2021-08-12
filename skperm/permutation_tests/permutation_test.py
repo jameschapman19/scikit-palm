@@ -3,18 +3,21 @@ from joblib import Parallel
 from sklearn.base import is_classifier, clone
 from sklearn.metrics import check_scoring
 from sklearn.model_selection._split import check_cv
-from sklearn.utils import indexable, check_random_state, _safe_indexing
+from sklearn.utils import indexable, check_random_state
 from sklearn.utils.fixes import delayed
 from sklearn.utils.metaestimators import _safe_split
 from sklearn.utils.validation import _check_fit_params
-from ..permutations.quickperms import quickperms
+from sklearn.utils.validation import check_array
+from tqdm import tqdm
+
+from skperm.permutations.quickperms import quickperms
 
 
 class PermutationTest:
     def __init__(self, estimator,
                  n_permutations=100, n_jobs=None, random_state=0,
                  verbose=0, fit_params=None, exchangeable_errors=True,
-                 is_errors=False, ignore_repeat_rows=False, ignore_repeat_perms=False):
+                 is_errors=False, ignore_repeat_rows=False, ignore_repeat_perms=False, scoring=None):
         """Evaluate the significance of a cross-validated score with permutations
         Permutes targets to generate 'randomized data' and compute the empirical
         p-value against the null hypothesis that features and targets are
@@ -73,28 +76,31 @@ class PermutationTest:
         self.is_errors = is_errors
         self.ignore_repeat_rows = ignore_repeat_rows
         self.ignore_repeat_perms = ignore_repeat_perms
+        self.scoring = scoring
 
-    def score(self, X, y, *, exchangeability_blocks=None, groups=None, cv=None, scoring=None):
-
+    def run(self, X, y, *, exchangeability_blocks=None, groups=None, cv=None):
+        X = check_array(X)
         X, y, groups = indexable(X, y, groups)
 
         cv = check_cv(cv, y, classifier=is_classifier(self.estimator))
-        scorer = check_scoring(self.estimator, scoring=scoring)
+        scorer = check_scoring(self.estimator, scoring=self.scoring)
 
-        permutations = quickperms(np.hstack((X, y[:, None])), exchangeability_blocks=exchangeability_blocks,
-                                  perms=self.n_permutations, exchangeable_errors=self.exchangeable_errors,
+        #+1 as 1st permutation from quickperms is unpermuted
+        permutations = quickperms(y[:, None], exchangeability_blocks=exchangeability_blocks,
+                                  perms=self.n_permutations+1, exchangeable_errors=self.exchangeable_errors,
                                   is_errors=self.is_errors, ignore_repeat_rows=self.ignore_repeat_rows,
                                   ignore_repeat_perms=self.ignore_repeat_perms)[0]
 
         # We clone the estimator to make sure that all the folds are
         # independent, and that it is pickle-able.
-        score = self._permutation_test_score(clone(self.estimator), X, y, groups, cv, scorer,
-                                        fit_params=self.fit_params)
+        score = PermutationTest._permutation_test_score(clone(self.estimator), X, y, groups, cv, scorer,
+                                                        fit_params=self.fit_params)
         permutation_scores = Parallel(n_jobs=self.n_jobs, verbose=self.verbose)(
             delayed(self._permutation_test_score)(
-                clone(self.estimator), X, y[np.abs(permutations[:, p]) - 1] * np.sign(permutations[:, p]),
+                clone(self.estimator), X,
+                np.diag(np.sign(permutations[:, 0])) @ y[np.abs(permutations[:, p]) - 1],
                 groups, cv, scorer, fit_params=self.fit_params)
-            for p in range(self.n_permutations))
+            for p in range(1,self.n_permutations+1))
         permutation_scores = np.array(permutation_scores)
         self.get_metrics(score, permutation_scores)
         return score, permutation_scores, self.metrics
@@ -102,17 +108,6 @@ class PermutationTest:
     def get_metrics(self, score, permutation_scores):
         self.metrics = {}
         self.metrics['pvalue'] = (np.sum(permutation_scores >= score) + 1.0) / (self.n_permutations + 1)
-
-    def _shuffle(self, y, groups, random_state):
-        """Return a shuffled copy of y eventually shuffle among same groups."""
-        if groups is None:
-            indices = random_state.permutation(len(y))
-        else:
-            indices = np.arange(len(groups))
-            for group in np.unique(groups):
-                this_mask = (groups == group)
-                indices[this_mask] = random_state.permutation(indices[this_mask])
-        return _safe_indexing(y, indices)
 
     @staticmethod
     def _permutation_test_score(estimator, X, y, groups, cv, scorer,
@@ -127,19 +122,23 @@ class PermutationTest:
             fit_params = _check_fit_params(X, fit_params, train)
             estimator.fit(X_train, y_train, **fit_params)
             avg_score.append(scorer(estimator, X_test, y_test))
-        return np.mean(avg_score)
+        return np.mean(avg_score, axis=0)
 
 
 def main():
-    import numpy as np
     import pandas as pd
     EB = pd.read_csv('../tests/data/eb.csv', header=None).values
-    X = np.random.rand(EB.shape[0], 5)
-    y = np.random.randint(5, size=EB.shape[0])
-    from sklearn.linear_model import LogisticRegression
-    lr = LogisticRegression()
-    blah = PermutationTest(lr)
-    a = blah.score(X, y)
+    from sklearn.datasets import load_iris
+    iris = load_iris()
+    X = iris.data[:len(EB)]
+    y = iris.target[:len(EB)]
+    from sklearn.svm import SVC
+    from sklearn.model_selection import StratifiedKFold, permutation_test_score
+    clf = SVC(kernel='linear', random_state=7)
+    cv = StratifiedKFold(2, shuffle=True, random_state=0)
+    a = permutation_test_score(clf, X, y, scoring='accuracy', cv=cv, n_permutations=1000)
+    permutationtest = PermutationTest(clf, scoring='accuracy', n_permutations=1000, random_state=42)
+    b = permutationtest.run(X, y, cv=2)
     print()
 
 
