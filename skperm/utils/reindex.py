@@ -55,22 +55,3 @@ def renumber(B, start=0, continuous=False):
     if B.shape[1] > 1:
         addcol = np.any(addcolvec)
     return Br, addcol
-
-
-def main():
-    import pandas as pd
-    EB = pd.read_csv('C:/Users/chapm/OneDrive/Documents/PALM-master/eb.csv', header=None).values
-    EB_c = pd.read_csv('C:/Users/chapm/OneDrive/Documents/PALM-master/eb_c.csv', header=None).values
-    EB_r = pd.read_csv('C:/Users/chapm/OneDrive/Documents/PALM-master/eb_r.csv', header=None).values
-    EB_m = pd.read_csv('C:/Users/chapm/OneDrive/Documents/PALM-master/eb_m.csv', header=None).values
-    EB_fl = pd.read_csv('C:/Users/chapm/OneDrive/Documents/PALM-master/eb_fl.csv', header=None).values
-
-    ebf = reindex(EB)
-    ebr = reindex(EB, method='restart')
-    ebc = reindex(EB, method='continuous')
-    ebm = reindex(EB, method='mixed')
-    print()
-
-
-if __name__ == "__main__":
-    main()
