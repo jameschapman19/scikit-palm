@@ -56,20 +56,3 @@ def _roy_ii(score):
 def _roy_iii():
     # TODO
     pass
-
-
-def main():
-    import numpy as np
-    import pandas as pd
-    from sklearn.cross_decomposition import CCA
-    EB = pd.read_csv('../tests/data/eb.csv', header=None).values
-    X = np.random.rand(EB.shape[0], 50)
-    y = np.random.normal(size=(EB.shape[0], 50))
-    cca = CCA(n_components=3)
-    blah = CCAPermutationTest(cca, n_permutations=10)
-    a = blah.score(X, y)
-    print()
-
-
-if __name__ == '__main__':
-    main()

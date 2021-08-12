@@ -123,24 +123,3 @@ class PermutationTest:
             estimator.fit(X_train, y_train, **fit_params)
             avg_score.append(scorer(estimator, X_test, y_test))
         return np.mean(avg_score, axis=0)
-
-
-def main():
-    import pandas as pd
-    EB = pd.read_csv('../tests/data/eb.csv', header=None).values
-    from sklearn.datasets import load_iris
-    iris = load_iris()
-    X = iris.data[:len(EB)]
-    y = iris.target[:len(EB)]
-    from sklearn.svm import SVC
-    from sklearn.model_selection import StratifiedKFold, permutation_test_score
-    clf = SVC(kernel='linear', random_state=7)
-    cv = StratifiedKFold(2, shuffle=True, random_state=0)
-    a = permutation_test_score(clf, X, y, scoring='accuracy', cv=cv, n_permutations=1000)
-    permutationtest = PermutationTest(clf, scoring='accuracy', n_permutations=1000, random_state=42)
-    b = permutationtest.run(X, y, cv=2)
-    print()
-
-
-if __name__ == '__main__':
-    main()
