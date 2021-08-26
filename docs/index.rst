@@ -10,8 +10,9 @@ Welcome to scikit-perm's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   source/documentation
    source/package_reference/modules.rst
-
+   source/developer_info
 
 
 Indices and tables
