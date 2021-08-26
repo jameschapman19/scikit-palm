@@ -1,4 +1,4 @@
-skperm.permutations.utils package
+skperm.permutations.utils
 =================================
 
 Submodules

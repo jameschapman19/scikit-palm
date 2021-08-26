@@ -1,4 +1,4 @@
-skperm.permutation\_tests package
+skperm.permutation\_tests
 =================================
 
 Subpackages

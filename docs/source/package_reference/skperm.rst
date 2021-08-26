@@ -9,7 +9,6 @@ Subpackages
 
    skperm.permutation_tests
    skperm.permutations
-   skperm.tests
    skperm.utils
 
 Module contents
