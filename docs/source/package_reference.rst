@@ -1,5 +1,8 @@
 Package Reference
 ==================
 
-.. automodule:: sk-perm
+.. automodule:: skperm.permutations
+   :members:
+
+.. automodule:: skperm.permutation_tests
    :members:
