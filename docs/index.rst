@@ -10,7 +10,7 @@ Welcome to scikit-perm's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-   package_reference/modules.rst
+   source/package_reference/modules.rst
 
 
 
