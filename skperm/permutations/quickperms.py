@@ -6,8 +6,51 @@ from .utils.shuftree import shuftree
 from .utils.tree import tree
 
 
-def quickperms(design_matrix=None, exchangeability_blocks=None, perms=100, exchangeable_errors=True,
-               is_errors=False, ignore_repeat_rows=False, ignore_repeat_perms=False, return_variance_groups=False):
+def quickperms(design_matrix: np.ndarray = None, exchangeability_blocks: np.ndarray = None, perms: int = 100,
+               exchangeable_errors: bool = True,
+               is_errors: bool = False, ignore_repeat_rows: bool = False, ignore_repeat_perms: bool = False,
+               return_variance_groups: bool = False):
+    """
+
+    Parameters
+    ----------
+    design_matrix :
+        Design matrix. It can be the full, unpartitioned design, or
+        if there are nuisance, simply the part that contains the EVs
+        of interest. This distinction is only relevant if there are
+        discrete EVs of interest and nuisance variables that are
+        continuous. You may consider a partitioning as in the
+        function palm_partition.m.
+        If you have no idea what to use, it is in general, it is in
+        general safe to use as M simply a vector (1:N)'.
+        You can also simply leave it empty ([]) if EB is supplied, and
+        by default it will be (1:N)'. If an EB isn't supplied, you can
+        simply use N and by default it will be (1:N)'.
+    exchangeability_blocks :
+        Exchangeability blocks (can be multi-level). For freely
+        exchangeable data, use ones(N,1). You can also leave it
+        empty ([]) if a valid, non-empty M was supplied.
+    perms :
+        Desired number of permutations. The actual number may be
+        smaller if N is too small. Use 0 for exhaustive.
+    exchangeable_errors :
+        True/False indicating whether to assume exchangeable errors,
+        which allow permutations.
+    is_errors :
+        True/False indicating whether to assume independent and
+        symmetric errors, which allow sign-flippings.
+    ignore_repeat_rows :
+        True/False indicating whether repeated rows in the design
+        should be be ignored. Default is false.
+    ignore_repeat_perms :
+        True/False indicating whether repeated permutations should
+        be ignored. Default is false.
+    return_variance_groups
+
+    Returns
+    -------
+    permutation_set : Permutation set. It contains one permutation per column.
+    """
     if design_matrix is None:
         if exchangeability_blocks is None:
             raise ValueError('Cant both be empty')

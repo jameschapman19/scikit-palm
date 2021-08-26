@@ -5,20 +5,6 @@ from sklearn.model_selection._split import StratifiedKFold, KFold, _CVIterableWr
 from sklearn.utils.multiclass import type_of_target
 
 
-def check_permuter(permuter, X):
-    """Input checker utility for building a cross-validator
-    Parameters
-    ----------
-
-    Returns
-    -------
-    checked_cv : a cross-validator instance.
-        The return value is a cross-validator which generates the train/test
-        splits via the ``split`` method.
-    """
-    return permuter
-
-
 # Author: Alexandre Gramfort <alexandre.gramfort@inria.fr>
 #         Gael Varoquaux <gael.varoquaux@normalesup.org>
 #         Olivier Grisel <olivier.grisel@ensta.org>

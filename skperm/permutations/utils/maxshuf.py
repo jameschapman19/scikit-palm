@@ -7,7 +7,19 @@ from skperm.utils.logfactorial import logfactorial
 vector_factorial = np.vectorize(math.factorial)
 
 
-def maxshuf(permutation_tree, stype='permutations', log=False):
+def maxshuf(permutation_tree, stype:str='permutations', log:bool=False):
+    """
+
+    Parameters
+    ----------
+    permutation_tree
+    stype
+    log
+
+    Returns
+    -------
+
+    """
     if log:
         if stype == 'permutations':
             maxb = lmaxpermnode(permutation_tree, 0)

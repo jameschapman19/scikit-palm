@@ -51,8 +51,3 @@ def _pillai(score):
 
 def _roy_ii(score):
     return np.max(score)/(1+np.max(score))
-
-
-def _roy_iii():
-    # TODO
-    pass

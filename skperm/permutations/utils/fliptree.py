@@ -7,7 +7,7 @@ from skperm.permutations.utils.maxshuf import maxshuf
 from skperm.utils.binary import incrbin
 
 
-def fliptree(permutation_tree, flips, conditional_monte_carlo=False, max_flips=np.inf):
+def fliptree(permutation_tree, flips, conditional_monte_carlo:bool=False, max_flips=np.inf):
     permutation_tree = deepcopy(permutation_tree)
     permutation_set = pickflip(permutation_tree, [], np.ones(len(permutation_tree)))
     permutation_set = np.hstack((np.array(permutation_set, ndmin=2), np.zeros((len(permutation_set), flips - 1))))
