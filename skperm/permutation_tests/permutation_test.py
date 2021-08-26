@@ -18,7 +18,8 @@ class PermutationTest:
                  n_permutations=100, n_jobs=None, random_state=0,
                  verbose=0, fit_params=None, exchangeable_errors=True,
                  is_errors=False, ignore_repeat_rows=False, ignore_repeat_perms=False, scoring=None):
-        """Evaluate the significance of a cross-validated score with permutations
+        """
+        Evaluate the significance of a cross-validated score with permutations
         Permutes targets to generate 'randomized data' and compute the empirical
         p-value against the null hypothesis that features and targets are
         independent.
@@ -29,42 +30,20 @@ class PermutationTest:
         A large p-value may be due to lack of real dependency between features
         and targets or the estimator was not able to use the dependency to
         give good predictions.
-        Read more in the :ref:`User Guide <permutation_test_score>`.
+
         Parameters
         ----------
-        estimator : estimator object implementing 'fit'
-            The object to use to fit the data.
-        n_permutations : int, default=100
-            Number of times to permute ``y``.
-        n_jobs : int, default=None
-            Number of jobs to run in parallel. Training the estimator and computing
-            the cross-validated score are parallelized over the permutations.
-            ``None`` means 1 unless in a :obj:`joblib.parallel_backend` context.
-            ``-1`` means using all processors. See :term:`Glossary <n_jobs>`
-            for more details.
-        random_state : int, RandomState instance or None, default=0
-            Pass an int for reproducible output for permutation of
-            ``y`` values among samples. See :term:`Glossary <random_state>`.
-        verbose : int, default=0
-            The verbosity level.
-        fit_params : dict, default=None
-            Parameters to pass to the fit method of the estimator.
-
-        Returns
-        -------
-        score : float
-            The true score without permuting targets.
-        permutation_scores : array of shape (n_permutations,)
-            The scores obtained for each permutations.
-        metrics : dict
-            Dictionary containing metrics
-        Notes
-        -----
-        This function implements Test 1 in:
-            Ojala and Garriga. `Permutation Tests for Studying Classifier
-            Performance
-            <http://www.jmlr.org/papers/volume11/ojala10a/ojala10a.pdf>`_. The
-            Journal of Machine Learning Research (2010) vol. 11
+        estimator
+        n_permutations
+        n_jobs
+        random_state
+        verbose
+        fit_params
+        exchangeable_errors
+        is_errors
+        ignore_repeat_rows
+        ignore_repeat_perms
+        scoring
         """
         self.estimator = estimator
         self.random_state = check_random_state(random_state)
