@@ -7,11 +7,11 @@ Welcome to scikit-perm's documentation!
 =======================================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 4
    :caption: Contents:
 
    source/documentation
-   source/package_reference/modules.rst
+   source/package_reference/skperm.rst
    source/developer_info
 
 
