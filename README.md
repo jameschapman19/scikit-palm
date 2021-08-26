@@ -5,6 +5,9 @@
 Implementing the PALM — Permutation Analysis of Linear Models toolbox (https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/PALM) for
 Python. PALM a
 
+## Documentation
+Further documentation is hosted at https://scikit-perm.readthedocs.io/en/latest/
+
 ## Objectives
 The goal is to have a flexible framework for statistically valid permutation testing when using linear models from
 https://github.com/scikit-learn/scikit-learn or otherwise. 
