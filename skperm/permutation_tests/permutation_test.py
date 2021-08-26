@@ -34,15 +34,28 @@ class PermutationTest:
         Parameters
         ----------
         estimator
-        n_permutations
-        n_jobs
-        random_state
-        verbose
-        fit_params
-        exchangeable_errors
-        is_errors
-        ignore_repeat_rows
-        ignore_repeat_perms
+        n_permutations :
+            number of permutations
+        n_jobs :
+            number of processors to use (permutations are computed in parallel)
+        random_state :
+            random seed for reproducibility
+        verbose :
+            whether to print progress
+        fit_params :
+            parameters used to fit estimator
+        exchangeable_errors :
+            True/False indicating whether to assume exchangeable errors,
+            which allow permutations.
+        is_errors :
+            True/False indicating whether to assume independent and
+            symmetric errors, which allow sign-flippings.
+        ignore_repeat_rows :
+            True/False indicating whether repeated rows in the design
+            should be be ignored. Default is false.
+        ignore_repeat_perms :
+            True/False indicating whether repeated permutations should
+            be ignored. Default is false.
         scoring
         """
         self.estimator = estimator

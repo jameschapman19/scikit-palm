@@ -35,8 +35,8 @@ class CCAPermutationTest(PermutationTest):
         fit_params :
             parameters used to fit estimator
         exchangeable_errors :
-        True/False indicating whether to assume exchangeable errors,
-        which allow permutations.
+            True/False indicating whether to assume exchangeable errors,
+            which allow permutations.
         is_errors :
             True/False indicating whether to assume independent and
             symmetric errors, which allow sign-flippings.
