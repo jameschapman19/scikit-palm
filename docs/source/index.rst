@@ -10,6 +10,7 @@ Welcome to scikit-perm's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   package_reference
 
 
 Indices and tables
