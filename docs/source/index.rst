@@ -11,11 +11,3 @@ Welcome to scikit-perm's documentation!
    :caption: Contents:
 
    package_reference
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
