@@ -1,4 +1,3 @@
-[![DOI](https://zenodo.org/badge/303801602.svg)](https://zenodo.org/badge/latestdoi/303801602)
 [![Python package](https://github.com/jameschapman19/scikit-perm/actions/workflows/python-package.yml/badge.svg)](https://github.com/jameschapman19/scikit-perm/actions/workflows/python-package.yml)
 [![codecov](https://codecov.io/gh/jameschapman19/pypalm/branch/main/graph/badge.svg?token=DUTZX5ZO2L)](https://codecov.io/gh/jameschapman19/pypalm)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/jameschapman19/pypalm/badges/quality-score.png?b=main&s=7539a6d0e88e9e24aa80d99830afc7d3486b2165)](https://scrutinizer-ci.com/g/jameschapman19/pypalm/?branch=main)
@@ -31,10 +30,23 @@ but neither appear to contain the functionality for multi-level exchangeability 
         - [ ] roy-iii
 
 ## References
+The authors of PALM https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/PALM https://github.com/andersonwinkler/PALM give the following references:
+
+The main reference for PALM:
  - Winkler AM, Ridgway GR, Webster MA, Smith SM, Nichols TE. Permutation inference for the general linear model. NeuroImage, 2014;92:381-397 (Open Access)
+
+For correction across contrasts:
  - Alberton BAV, Nichols TE, Gamba HR, Winkler AM. Multiple testing correction over contrasts for brain imaging. Neuroimage. 2020 Mar 19:116760. (Open Access)
+
+For Non-Parametric Combination, classical multivariate tests (MANOVA, MANCOVA), assessed with permutations, and for correction over contrasts and/or modalities:
  - Winkler AM, Webster MA, Brooks JC, Tracey I, Smith SM, Nichols TE. Non-Parametric Combination and related permutation tests for neuroimaging. Hum Brain Mapp. 2016 Apr;37(4):1486-511. (Open Access)
+
+For the multi-level exchangeability blocks:
  - Winkler AM, Webster MA, Vidaurre D, Nichols TE, Smith SM. Multi-level block permutation. Neuroimage. 2015;123:253-68. (Open Access)
+
+For the accelerated permutation inference:
  - Winkler AM, Ridgway GR, Douaud G, Nichols TE, Smith SM. Faster permutation inference in brain imaging. Neuroimage. 2016 Jun 7;141:502-516. (Open Access)
+
+For additional theory of permutation tests in neuroimaging:
  - Nichols TE, Holmes AP. Nonparametric permutation tests for functional neuroimaging: a primer with examples. Hum Brain Mapp. 2002 Jan;15(1):1-25.
  - Holmes AP, Blair RC, Watson JD, Ford I. Nonparametric analysis of statistic images from functional mapping experiments. J Cereb Blood Flow Metab. 1996 Jan;16(1):7-22.
