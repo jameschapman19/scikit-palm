@@ -1,13 +1,19 @@
 import numpy as np
 from sklearn.utils.validation import check_random_state
 
-from skperm.permutations.utils.nextperm import nextperm
-from skperm.utils.binary import d2b, incrbin
-from skperm.utils.logfactorial import logfactorial
+from skpalm.permutations.utils.nextperm import nextperm
+from skpalm.utils.binary import d2b, incrbin
+from skpalm.utils.logfactorial import logfactorial
 
 
-def shuffree(design_matrix, perms, conditional_monte_carlo=False,
-             exchangeable_errors=True, is_errors=False, random_state=None):
+def shuffree(
+    design_matrix,
+    perms,
+    conditional_monte_carlo=False,
+    exchangeable_errors=True,
+    is_errors=False,
+    random_state=None,
+):
     """
 
     Parameters
@@ -45,30 +51,32 @@ def shuffree(design_matrix, perms, conditional_monte_carlo=False,
         maxP = np.round(np.exp(lmaxP))
         if U.size == n_subjects:
             if np.isinf(maxP):
-                print(f'Number of possible permutations is exp({lmaxP}) = {n_subjects}!.\n')
+                print(
+                    f"Number of possible permutations is exp({lmaxP}) = {n_subjects}!.\n"
+                )
             else:
-                print(f'Number of possible permutations is {maxP} = {n_subjects}!.\n')
+                print(f"Number of possible permutations is {maxP} = {n_subjects}!.\n")
         else:
             if np.isinf(maxP):
-                print(f'Number of possible permutations is exp({lmaxP}).\n')
+                print(f"Number of possible permutations is exp({lmaxP}).\n")
             else:
-                print(f'Number of possible permutations is {maxP}.\n')
+                print(f"Number of possible permutations is {maxP}.\n")
     if is_errors:
         lmaxS = n_subjects * np.log(2)
         maxS = 2 ** n_subjects
         if np.isinf(maxS):
-            print(f'Number of possible sign-flips is exp({lmaxS}) = 2^{n_subjects}.\n')
+            print(f"Number of possible sign-flips is exp({lmaxS}) = 2^{n_subjects}.\n")
         else:
-            print(f'Number of possible sign-flips is {maxS} = 2^{n_subjects}.\n')
+            print(f"Number of possible sign-flips is {maxS} = 2^{n_subjects}.\n")
     maxB = maxP * maxS
     lmaxB = lmaxP + lmaxS
 
     if exchangeable_errors and not is_errors:
-        whatshuf = 'permutations only'
+        whatshuf = "permutations only"
     elif is_errors and not exchangeable_errors:
-        whatshuf = 'sign flips only'
+        whatshuf = "sign flips only"
     elif exchangeable_errors and is_errors:
-        whatshuf = 'permutations and sign flips'
+        whatshuf = "permutations and sign flips"
 
     # ensures at least 1 perm and 1 sign flipping
     permutation_set = seqS[:, 1].copy().astype(int)
@@ -76,9 +84,14 @@ def shuffree(design_matrix, perms, conditional_monte_carlo=False,
 
     if perms == 0 or perms > maxB:
         # run exhaustively
-        print(f'Generating {maxB} shufflings ({whatshuf}).\n')
+        print(f"Generating {maxB} shufflings ({whatshuf}).\n")
         if exchangeable_errors:
-            permutation_set = np.hstack((permutation_set[:, np.newaxis], np.zeros((n_subjects, maxP - 1), dtype=int)))
+            permutation_set = np.hstack(
+                (
+                    permutation_set[:, np.newaxis],
+                    np.zeros((n_subjects, maxP - 1), dtype=int),
+                )
+            )
             for p in range(1, maxP):
                 seqS = nextperm(seqS)
                 permutation_set[:, p] = seqS[:, 1]
@@ -95,12 +108,22 @@ def shuffree(design_matrix, perms, conditional_monte_carlo=False,
     elif perms < maxB:
         if exchangeable_errors:
             if perms >= maxP:
-                permutation_set = np.hstack((permutation_set[:, None], np.zeros((n_subjects, maxP - 1), dtype=int)))
+                permutation_set = np.hstack(
+                    (
+                        permutation_set[:, None],
+                        np.zeros((n_subjects, maxP - 1), dtype=int),
+                    )
+                )
                 for p in range(1, maxP):
                     seqS = nextperm(seqS)
                     permutation_set[:, p] = seqS[:, 1]
             else:
-                permutation_set = np.hstack((permutation_set[:, None], np.zeros((n_subjects, perms - 1), dtype=int)))
+                permutation_set = np.hstack(
+                    (
+                        permutation_set[:, None],
+                        np.zeros((n_subjects, perms - 1), dtype=int),
+                    )
+                )
                 if conditional_monte_carlo:
                     for p in range(perms):
                         permutation_set[:, p] = np.random.permutation(n_subjects).T
@@ -112,7 +135,7 @@ def shuffree(design_matrix, perms, conditional_monte_carlo=False,
                         while whiletest:
                             permutation_set[:, p] = np.random.permutation(n_subjects)
                             Pseq[:, p] = seqS[permutation_set[:, p], 0]
-                            whiletest = np.any(np.all(Pseq[:, p] == Pseq[:, :p - 1]))
+                            whiletest = np.any(np.all(Pseq[:, p] == Pseq[:, : p - 1]))
 
         if is_errors:
             if perms >= maxS:
@@ -131,7 +154,7 @@ def shuffree(design_matrix, perms, conditional_monte_carlo=False,
                         whiletest = True
                         while whiletest:
                             Sset[:, p] = np.random.rand(n_subjects, 1) > 0.5
-                            whiletest = np.any(np.all(Sset[:, p] == Sset[:, :p - 1]))
+                            whiletest = np.any(np.all(Sset[:, p] == Sset[:, : p - 1]))
                     Sset[np.logical_not(np.logical_not(Sset))] = -1
                     Sset[np.logical_not(Sset)] = 1
 
@@ -154,7 +177,10 @@ def shuffree(design_matrix, perms, conditional_monte_carlo=False,
         Bset[:, 0] = np.arange(n_subjects) + 1
         if conditional_monte_carlo:
             for b in range(1, perms):
-                Bset[:, b] = permutation_set[:, random_state.randint(nP)] * Sset[:, random_state.randint(nS)]
+                Bset[:, b] = (
+                    permutation_set[:, random_state.randint(nP)]
+                    * Sset[:, random_state.randint(nS)]
+                )
         else:
             bidx = np.argsort(random_state.rand(nP * nS))
             bidx = bidx[:perms]
@@ -178,15 +204,17 @@ def main():
     n = 3
     repeats = 2
     import math
+
     # equation for permutations with repeats
     manual_perms = math.factorial(n * repeats) / (math.factorial(repeats) ** n)
-    print(f'manually calculated permutations without sign flips: {manual_perms}')
+    print(f"manually calculated permutations without sign flips: {manual_perms}")
     M = np.random.randint(low=1, high=5, size=(n, 5))
     M = np.repeat(M, repeats, axis=0)
     A = shuffree(M, perms=0, conditional_monte_carlo=False, is_errors=False)
     function_perms = len(np.unique(A[0], axis=1, return_counts=True)[1])
-    print(f'function calculated permutations without sign flips: {function_perms}')
-    from skperm.swapfmt import swapfmt
+    print(f"function calculated permutations without sign flips: {function_perms}")
+    from skpalm.swapfmt import swapfmt
+
     swapfmt(A[0])
     print()
 

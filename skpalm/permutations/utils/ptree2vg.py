@@ -1,6 +1,6 @@
 import numpy as np
 
-from skperm.permutations.utils.permtree import permtree
+from skpalm.permutations.utils.permtree import permtree
 
 
 def ptree2vg(permutation_tree):
@@ -17,10 +17,14 @@ def pickvg(permutation_tree, within_block, n):
     if permutation_tree:
         if within_block:
             for u in range(nU):
-                [VGu, n] = pickvg(permutation_tree[u][2], np.isnan(permutation_tree[u][0]), n)
+                [VGu, n] = pickvg(
+                    permutation_tree[u][2], np.isnan(permutation_tree[u][0]), n
+                )
                 VG = np.vstack((np.array(VG), np.array(VGu)))
         else:
-            [VGu, n] = pickvg(permutation_tree[0][2], np.isnan(permutation_tree[0][0]), n)
+            [VGu, n] = pickvg(
+                permutation_tree[0][2], np.isnan(permutation_tree[0][0]), n
+            )
             VG = np.repeat(VGu, (nU, 1))
     else:
         if within_block:

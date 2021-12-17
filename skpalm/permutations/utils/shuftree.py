@@ -3,61 +3,82 @@ from copy import deepcopy
 import numpy as np
 from sklearn.utils.validation import check_random_state
 
-from skperm.permutations.utils.fliptree import fliptree
-from skperm.permutations.utils.maxshuf import maxshuf
-from skperm.permutations.utils.permtree import permtree
+from skpalm.permutations.utils.fliptree import fliptree
+from skpalm.permutations.utils.maxshuf import maxshuf
+from skpalm.permutations.utils.permtree import permtree
 
 
-def shuftree(permutation_tree, perms, conditional_monte_carlo=False, exchangeable_errors=True, is_errors=False,
-             random_state=None):
+def shuftree(
+    permutation_tree,
+    perms,
+    conditional_monte_carlo=False,
+    exchangeable_errors=True,
+    is_errors=False,
+    random_state=None,
+):
     permutation_set = None
     Sset = None
     random_state = check_random_state(random_state)
     maxP = 1
     maxS = 1
     if exchangeable_errors:
-        lmaxP = maxshuf(permutation_tree, 'permutations', True)
+        lmaxP = maxshuf(permutation_tree, "permutations", True)
         maxP = np.exp(lmaxP)
         if np.isinf(maxP):
-            print(f'Number of possible permutations is exp({lmaxP}).\n')
+            print(f"Number of possible permutations is exp({lmaxP}).\n")
         else:
-            print(f'Number of possible permutations is {maxP}.\n')
+            print(f"Number of possible permutations is {maxP}.\n")
     if is_errors:
-        lmaxS = maxshuf(permutation_tree, 'flips', True)
+        lmaxS = maxshuf(permutation_tree, "flips", True)
         maxS = np.exp(lmaxS)
         if np.isinf(maxS):
-            print(f'Number of possible sign-flips is exp({lmaxS}).\n')
+            print(f"Number of possible sign-flips is exp({lmaxS}).\n")
         else:
-            print(f'Number of possible sign-flips is {maxS}.\n')
+            print(f"Number of possible sign-flips is {maxS}.\n")
 
     maxB = maxP * maxS
 
     if exchangeable_errors and not is_errors:
-        whatshuf = 'permutations only'
+        whatshuf = "permutations only"
     elif is_errors and not exchangeable_errors:
-        whatshuf = 'sign flips only'
+        whatshuf = "sign flips only"
     elif exchangeable_errors and is_errors:
-        whatshuf = 'permutations and sign flips'
+        whatshuf = "permutations and sign flips"
 
     if perms == 0 or perms > maxB:
         # run exhaustively
-        print(f'Generating {maxB} shufflings ({whatshuf}).\n')
+        print(f"Generating {maxB} shufflings ({whatshuf}).\n")
         if exchangeable_errors:
-            permutation_set = permtree(permutation_tree, int(np.round(maxP)), np.round(maxP))
+            permutation_set = permtree(
+                permutation_tree, int(np.round(maxP)), np.round(maxP)
+            )
         if is_errors:
             Sset = fliptree(permutation_tree, int(np.round(maxP)), np.round(maxP))
     elif perms < maxB:
         if exchangeable_errors:
             if perms > maxP:
-                permutation_set = permtree(permutation_tree, int(np.round(maxP)), conditional_monte_carlo,
-                                           np.round(maxP))
+                permutation_set = permtree(
+                    permutation_tree,
+                    int(np.round(maxP)),
+                    conditional_monte_carlo,
+                    np.round(maxP),
+                )
             else:
-                permutation_set = permtree(permutation_tree, perms, conditional_monte_carlo, np.round(maxP))
+                permutation_set = permtree(
+                    permutation_tree, perms, conditional_monte_carlo, np.round(maxP)
+                )
         if is_errors:
             if perms > maxS:
-                Sset = fliptree(permutation_tree, int(np.round(maxS)), conditional_monte_carlo, np.round(maxS))
+                Sset = fliptree(
+                    permutation_tree,
+                    int(np.round(maxS)),
+                    conditional_monte_carlo,
+                    np.round(maxS),
+                )
             else:
-                Sset = fliptree(permutation_tree, perms, conditional_monte_carlo, np.round(maxS))
+                Sset = fliptree(
+                    permutation_tree, perms, conditional_monte_carlo, np.round(maxS)
+                )
 
     if permutation_set is not None:
         nP = permutation_set.T.shape[0]
@@ -91,7 +112,10 @@ def shuftree(permutation_tree, perms, conditional_monte_carlo=False, exchangeabl
         Bset[:, 0] = permutation_set[:, 0] * Sset[:, 0]
         if conditional_monte_carlo:
             for b in range(1, perms):
-                Bset[b] = permutation_set[random_state.randint(nP)] * Sset[random_state.randint(nS)]
+                Bset[b] = (
+                    permutation_set[random_state.randint(nP)]
+                    * Sset[random_state.randint(nS)]
+                )
         else:
             bidx = np.argsort(random_state.rand(nP * nS))
             bidx = bidx[:perms]

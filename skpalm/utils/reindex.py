@@ -1,8 +1,8 @@
 import numpy as np
 
 
-def reindex(exchangeability_blocks, method='fixleaves'):
-    if method == 'continuous':
+def reindex(exchangeability_blocks, method="fixleaves"):
+    if method == "continuous":
         exchangeability_blocks_reindexed = np.zeros_like(exchangeability_blocks)
         for b in range(exchangeability_blocks.shape[1]):
             cnt = 0
@@ -10,26 +10,42 @@ def reindex(exchangeability_blocks, method='fixleaves'):
                 for u in np.unique(exchangeability_blocks_reindexed[:, b - 1]):
                     idx = exchangeability_blocks_reindexed[:, b - 1] == u
                     exchangeability_blocks_reindexed[idx, b] = np.squeeze(
-                        renumber(exchangeability_blocks[idx, b][:, None], start=cnt, continuous=True)[0])
+                        renumber(
+                            exchangeability_blocks[idx, b][:, None],
+                            start=cnt,
+                            continuous=True,
+                        )[0]
+                    )
                     cnt += len(np.unique(exchangeability_blocks_reindexed[idx, b]))
             else:
-                exchangeability_blocks_reindexed[:, b][:, None] = \
-                    renumber(exchangeability_blocks[:, b][:, None], start=cnt)[0]
-    elif method == 'restart':
+                exchangeability_blocks_reindexed[:, b][:, None] = renumber(
+                    exchangeability_blocks[:, b][:, None], start=cnt
+                )[0]
+    elif method == "restart":
         exchangeability_blocks_reindexed = renumber(exchangeability_blocks)[0]
-    elif method == 'mixed':
+    elif method == "mixed":
         exchangeability_blocks_reindexed = np.hstack(
-            (reindex(exchangeability_blocks, method='restart')[:, :-1],
-             reindex(exchangeability_blocks, method='continuous')[:, -1][:, None]))
-    elif method == 'fixleaves':
+            (
+                reindex(exchangeability_blocks, method="restart")[:, :-1],
+                reindex(exchangeability_blocks, method="continuous")[:, -1][:, None],
+            )
+        )
+    elif method == "fixleaves":
         exchangeability_blocks_reindexed, addcol = renumber(exchangeability_blocks)
         if addcol:
             exchangeability_blocks_reindexed = np.hstack(
-                (exchangeability_blocks_reindexed,
-                 (np.arange(exchangeability_blocks_reindexed.shape[0]).T + 1)[:, None]))
-            exchangeability_blocks_reindexed = renumber(exchangeability_blocks_reindexed)[0]
+                (
+                    exchangeability_blocks_reindexed,
+                    (np.arange(exchangeability_blocks_reindexed.shape[0]).T + 1)[
+                        :, None
+                    ],
+                )
+            )
+            exchangeability_blocks_reindexed = renumber(
+                exchangeability_blocks_reindexed
+            )[0]
     else:
-        raise ValueError('method not implemented')
+        raise ValueError("method not implemented")
 
     return exchangeability_blocks_reindexed
 

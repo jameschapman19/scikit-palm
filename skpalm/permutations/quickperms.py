@@ -1,15 +1,21 @@
 import numpy as np
 
-from skperm.utils.reindex import reindex
+from skpalm.utils.reindex import reindex
 from .utils.shuffree import shuffree
 from .utils.shuftree import shuftree
 from .utils.tree import tree
 
 
-def quickperms(design_matrix: np.ndarray = None, exchangeability_blocks: np.ndarray = None, perms: int = 100,
-               exchangeable_errors: bool = True,
-               is_errors: bool = False, ignore_repeat_rows: bool = False, ignore_repeat_perms: bool = False,
-               return_variance_groups: bool = False):
+def quickperms(
+    design_matrix: np.ndarray = None,
+    exchangeability_blocks: np.ndarray = None,
+    perms: int = 100,
+    exchangeable_errors: bool = True,
+    is_errors: bool = False,
+    ignore_repeat_rows: bool = False,
+    ignore_repeat_perms: bool = False,
+    return_variance_groups: bool = False,
+):
     """
 
     Parameters
@@ -53,7 +59,7 @@ def quickperms(design_matrix: np.ndarray = None, exchangeability_blocks: np.ndar
     """
     if design_matrix is None:
         if exchangeability_blocks is None:
-            raise ValueError('Cant both be empty')
+            raise ValueError("Cant both be empty")
         else:
             n_subects = exchangeability_blocks.shape[0]
     else:
@@ -65,13 +71,20 @@ def quickperms(design_matrix: np.ndarray = None, exchangeability_blocks: np.ndar
     # Create shufflings
     if exchangeability_blocks is None:
         simple = True
-        permutation_set = shuffree(design_matrix, perms, ignore_repeat_rows, exchangeable_errors, is_errors)
+        permutation_set = shuffree(
+            design_matrix, perms, ignore_repeat_rows, exchangeable_errors, is_errors
+        )
     else:
         simple = False
-        exchangeability_blocks = reindex(exchangeability_blocks, 'fixleaves')
+        exchangeability_blocks = reindex(exchangeability_blocks, "fixleaves")
         permutation_tree = tree(exchangeability_blocks, design_matrix)
-        permutation_set = shuftree(permutation_tree, perms, ignore_repeat_perms,
-                                   exchangeable_errors=exchangeable_errors, is_errors=is_errors)
+        permutation_set = shuftree(
+            permutation_tree,
+            perms,
+            ignore_repeat_perms,
+            exchangeable_errors=exchangeable_errors,
+            is_errors=is_errors,
+        )
 
     # Define variance groups
     if return_variance_groups:

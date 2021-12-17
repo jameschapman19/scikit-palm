@@ -2,12 +2,12 @@ import math
 
 import numpy as np
 
-from skperm.utils.logfactorial import logfactorial
+from skpalm.utils.logfactorial import logfactorial
 
 vector_factorial = np.vectorize(math.factorial)
 
 
-def maxshuf(permutation_tree, stype:str='permutations', log:bool=False):
+def maxshuf(permutation_tree, stype: str = "permutations", log: bool = False):
     """
 
     Parameters
@@ -21,21 +21,21 @@ def maxshuf(permutation_tree, stype:str='permutations', log:bool=False):
 
     """
     if log:
-        if stype == 'permutations':
+        if stype == "permutations":
             maxb = lmaxpermnode(permutation_tree, 0)
-        elif stype == 'flips':
+        elif stype == "flips":
             maxb = lmaxflipnode(permutation_tree, 0)
             maxb = maxb / np.log2(np.exp(1))
-        elif stype == 'both':
+        elif stype == "both":
             maxp = lmaxpermnode(permutation_tree, 0)
             maxs = lmaxflipnode(permutation_tree, 0)
             maxb = maxp + maxs
     else:
-        if stype == 'permutations':
+        if stype == "permutations":
             maxb = maxpermnode(permutation_tree, 1)
-        elif stype == 'flips':
+        elif stype == "flips":
             maxb = maxflipnode(permutation_tree, 1)
-        elif stype == 'both':
+        elif stype == "both":
             maxp = maxpermnode(permutation_tree, 1)
             maxs = maxflipnode(permutation_tree, 1)
             maxb = maxp * maxs
@@ -44,7 +44,9 @@ def maxshuf(permutation_tree, stype:str='permutations', log:bool=False):
 
 def maxpermnode(permutation_tree, nperms):
     for u in range(len(permutation_tree)):
-        if permutation_tree[u][0] is not None and not np.any(np.isnan(permutation_tree[u][0])):
+        if permutation_tree[u][0] is not None and not np.any(
+            np.isnan(permutation_tree[u][0])
+        ):
             nperms = nperms * seq2nperms(permutation_tree[u][0][0])
         else:
             nperms = nperms * 1
@@ -57,7 +59,9 @@ def maxflipnode(permutation_tree, nflips):
     for u in range(len(permutation_tree)):
         if permutation_tree[u][2] is not None and len(permutation_tree[u][2][0]) > 1:
             nflips = maxflipnode(permutation_tree[u][2], nflips)
-        if permutation_tree[u][0] is not None and not np.any(np.isnan(permutation_tree[u][0])):
+        if permutation_tree[u][0] is not None and not np.any(
+            np.isnan(permutation_tree[u][0])
+        ):
             nflips = nflips * 2 ** len(permutation_tree[u][1])
         else:
             nflips = nflips
@@ -66,7 +70,9 @@ def maxflipnode(permutation_tree, nflips):
 
 def lmaxpermnode(permutation_tree, nperms):
     for u in range(len(permutation_tree)):
-        if permutation_tree[u][0] is not None and not np.any(np.isnan(permutation_tree[u][0])):
+        if permutation_tree[u][0] is not None and not np.any(
+            np.isnan(permutation_tree[u][0])
+        ):
             nperms = nperms + lseq2nperms(permutation_tree[u][0][0])
         else:
             nperms = nperms

@@ -44,9 +44,9 @@ def check_cv(cv=5, y=None, *, classifier=False):
     cv = 5 if cv is None else cv
     if isinstance(cv, numbers.Integral):
         if (
-                classifier
-                and (y is not None)
-                and (type_of_target(y) in ("binary", "multiclass"))
+            classifier
+            and (y is not None)
+            and (type_of_target(y) in ("binary", "multiclass"))
         ):
             return StratifiedKFold(cv)
         else:

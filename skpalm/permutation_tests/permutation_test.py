@@ -8,16 +8,25 @@ from sklearn.utils.fixes import delayed
 from sklearn.utils.metaestimators import _safe_split
 from sklearn.utils.validation import _check_fit_params
 from sklearn.utils.validation import check_array
-from tqdm import tqdm
 
-from skperm.permutations.quickperms import quickperms
+from skpalm.permutations.quickperms import quickperms
 
 
 class PermutationTest:
-    def __init__(self, estimator,
-                 n_permutations=100, n_jobs=None, random_state=0,
-                 verbose=0, fit_params=None, exchangeable_errors=True,
-                 is_errors=False, ignore_repeat_rows=False, ignore_repeat_perms=False, scoring=None):
+    def __init__(
+        self,
+        estimator,
+        n_permutations=100,
+        n_jobs=None,
+        random_state=0,
+        verbose=0,
+        fit_params=None,
+        exchangeable_errors=True,
+        is_errors=False,
+        ignore_repeat_rows=False,
+        ignore_repeat_perms=False,
+        scoring=None,
+    ):
         """
         Evaluate the significance of a cross-validated score with permutations
         Permutes targets to generate 'randomized data' and compute the empirical
@@ -77,33 +86,47 @@ class PermutationTest:
         cv = check_cv(cv, y, classifier=is_classifier(self.estimator))
         scorer = check_scoring(self.estimator, scoring=self.scoring)
 
-        #+1 as 1st permutation from quickperms is unpermuted
-        permutations = quickperms(y[:, None], exchangeability_blocks=exchangeability_blocks,
-                                  perms=self.n_permutations+1, exchangeable_errors=self.exchangeable_errors,
-                                  is_errors=self.is_errors, ignore_repeat_rows=self.ignore_repeat_rows,
-                                  ignore_repeat_perms=self.ignore_repeat_perms)[0]
+        # +1 as 1st permutation from quickperms is unpermuted
+        permutations = quickperms(
+            y[:, None],
+            exchangeability_blocks=exchangeability_blocks,
+            perms=self.n_permutations + 1,
+            exchangeable_errors=self.exchangeable_errors,
+            is_errors=self.is_errors,
+            ignore_repeat_rows=self.ignore_repeat_rows,
+            ignore_repeat_perms=self.ignore_repeat_perms,
+        )[0]
 
         # We clone the estimator to make sure that all the folds are
         # independent, and that it is pickle-able.
-        score = PermutationTest._permutation_test_score(clone(self.estimator), X, y, groups, cv, scorer,
-                                                        fit_params=self.fit_params)
+        score = PermutationTest._permutation_test_score(
+            clone(self.estimator), X, y, groups, cv, scorer, fit_params=self.fit_params
+        )
         permutation_scores = Parallel(n_jobs=self.n_jobs, verbose=self.verbose)(
             delayed(self._permutation_test_score)(
-                clone(self.estimator), X,
-                np.diag(np.sign(permutations[:, 0])) @ y[np.abs(permutations[:, p]) - 1],
-                groups, cv, scorer, fit_params=self.fit_params)
-            for p in range(1,self.n_permutations+1))
+                clone(self.estimator),
+                X,
+                np.diag(np.sign(permutations[:, 0]))
+                @ y[np.abs(permutations[:, p]) - 1],
+                groups,
+                cv,
+                scorer,
+                fit_params=self.fit_params,
+            )
+            for p in range(1, self.n_permutations + 1)
+        )
         permutation_scores = np.array(permutation_scores)
         self.get_metrics(score, permutation_scores)
         return score, permutation_scores, self.metrics
 
     def get_metrics(self, score, permutation_scores):
         self.metrics = {}
-        self.metrics['pvalue'] = (np.sum(permutation_scores >= score) + 1.0) / (self.n_permutations + 1)
+        self.metrics["pvalue"] = (np.sum(permutation_scores >= score) + 1.0) / (
+            self.n_permutations + 1
+        )
 
     @staticmethod
-    def _permutation_test_score(estimator, X, y, groups, cv, scorer,
-                                fit_params):
+    def _permutation_test_score(estimator, X, y, groups, cv, scorer, fit_params):
         """Auxiliary function for permutation_test_score"""
         # Adjust length of sample weights
         fit_params = fit_params if fit_params is not None else {}
