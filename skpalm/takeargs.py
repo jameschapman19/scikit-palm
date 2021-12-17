@@ -1,7 +1,12 @@
+import numpy as np
 from absl import flags
 
+from skpalm.permutations.utils.ptree2vg import ptree2vg
+from skpalm.permutations.utils.tree import tree
 from skpalm.plm_default import plm_default
+from skpalm.utils.miscread import miscread
 from skpalm.utils.ready import ready
+from skpalm.utils.reindex import reindex
 
 FLAGS = flags.FLAGS
 
@@ -72,3 +77,48 @@ def takeargs():
     """
     if not FLAGS.ee and not FLAGS.ise:
         FLAGS.ee = True
+
+    if not FLAGS.cmcx:
+        seqtmp = np.zeros(plm.N, sum(plm.nC))
+        plm.seq = [] * plm.nM
+        for m in range(plm.nM):
+            plm.seq[m] = [] * plm.nC
+            for c in range(plm.nC):
+                # TODO
+                raise NotImplementedError  # Line 2364 https://github.com/andersonwinkler/PALM/blob/master/palm_takeargs.m
+                # Xtmp=partition()
+                # [~,~,plm.seq{m}{c}] = unique(Xtmp,'rows');
+                # seqtmp(:,j) = plm.seq{m}{c};
+    else:
+        plm.seq = [] * plm.nM
+        for m in range(plm.nM):
+            plm.seq[m] = [] * plm.nC
+            for c in range(plm.nC):
+                plm.seq[m][c] = np.arange(plm.N)
+
+    """
+    Read the exchangeability blocks. If none is specified, all observations are assumed to be in the same large block
+    """
+    if FLAGS.eb is None:
+        plm.EB = []
+    else:
+        plm.EB = miscread(FLAGS.EB).data
+        if plm.subjidx is not None:
+            plm.EB = plm.EB[plm.subjidx]
+
+        plm.EB = reindex(plm.EB, method="fixleaves")
+    """
+    Load variance groups
+    """
+    if FLAGS.singlevg:
+        plm.VG = np.ones(plm.N)
+    elif FLAGS.VG == "auto":
+        if len(plm.EB) == 0:
+            plm.VG = np.ones(plm.N)
+        else:
+            Ptree = tree(plm.EB)
+            plm.VG = ptree2vg(Ptree)
+    else:
+        plm.VG = miscread(FLAGS.vg).data
+    if plm.subjidx is not None:
+        plm.VG = plm.VG[plm.subjidx]
