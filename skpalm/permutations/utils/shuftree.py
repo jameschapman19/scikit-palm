@@ -127,4 +127,4 @@ def shuftree(
     # TODO metric
     mtr = np.zeros(9)
 
-    return Bset, nB, mtr
+    return Bset.astype(int), nB, mtr

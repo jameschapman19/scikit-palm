@@ -197,27 +197,4 @@ def shuffree(
 
     # TODO permutation matrices instead of indices
 
-    return Bset, nB, mtr
-
-
-def main():
-    n = 3
-    repeats = 2
-    import math
-
-    # equation for permutations with repeats
-    manual_perms = math.factorial(n * repeats) / (math.factorial(repeats) ** n)
-    print(f"manually calculated permutations without sign flips: {manual_perms}")
-    M = np.random.randint(low=1, high=5, size=(n, 5))
-    M = np.repeat(M, repeats, axis=0)
-    A = shuffree(M, perms=0, conditional_monte_carlo=False, is_errors=False)
-    function_perms = len(np.unique(A[0], axis=1, return_counts=True)[1])
-    print(f"function calculated permutations without sign flips: {function_perms}")
-    from skpalm.swapfmt import swapfmt
-
-    swapfmt(A[0])
-    print()
-
-
-if __name__ == "__main__":
-    main()
+    return Bset.astype(int), nB, mtr

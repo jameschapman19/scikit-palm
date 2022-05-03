@@ -1,5 +1,7 @@
 from unittest import TestCase
 import numpy as np
+
+from skpalm.permutations import quickperms
 from skpalm.utils.binary import d2b, incrbin
 from skpalm.utils.reindex import reindex
 import os
@@ -19,7 +21,7 @@ class Test(TestCase):
         bin = d2b(dec, bin_dim)
         bin_plus_one = incrbin(bin)
         assert (
-            bin.shape[1] == 5
+                bin.shape[1] == 5
         ), "maximum dimensionality of binary representation not equal to {bin_dim}"
         assert np.array_equal(bin_plus_one, d2b(dec_plus_one, bin_dim))
 
@@ -27,16 +29,19 @@ class Test(TestCase):
         import pandas as pd
 
         print(os.listdir())
-        EB = pd.read_csv("skperm/tests/data/eb.csv", header=None).values
-        EB_c = pd.read_csv("skperm/tests/data/eb_c.csv", header=None).values
-        EB_r = pd.read_csv("skperm/tests/data/eb_r.csv", header=None).values
-        EB_m = pd.read_csv("skperm/tests/data/eb_m.csv", header=None).values
-        EB_fl = pd.read_csv("skperm/tests/data/eb_fl.csv", header=None).values
+        EB = pd.read_csv("data/eb.csv", header=None).values
+        EB_c = pd.read_csv("data/eb_c.csv", header=None).values
+        EB_r = pd.read_csv("data/eb_r.csv", header=None).values
+        EB_m = pd.read_csv("data/eb_m.csv", header=None).values
+        EB_fl = pd.read_csv("data/eb_fl.csv", header=None).values
 
         eb_fl = reindex(EB)
         eb_r = reindex(EB, method="restart")
         eb_c = reindex(EB, method="continuous")
         eb_m = reindex(EB, method="mixed")
+
+        a = np.random.rand(EB.shape[0], 10)
+        m = quickperms(None, EB)
 
         np.testing.assert_array_almost_equal(EB_fl, eb_fl)
         np.testing.assert_array_almost_equal(EB_r, eb_r)

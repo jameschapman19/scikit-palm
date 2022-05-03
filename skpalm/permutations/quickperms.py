@@ -7,14 +7,14 @@ from .utils.tree import tree
 
 
 def quickperms(
-    design_matrix: np.ndarray = None,
-    exchangeability_blocks: np.ndarray = None,
-    perms: int = 100,
-    exchangeable_errors: bool = True,
-    is_errors: bool = False,
-    ignore_repeat_rows: bool = False,
-    ignore_repeat_perms: bool = False,
-    return_variance_groups: bool = False,
+        design_matrix: np.ndarray = None,
+        exchangeability_blocks: np.ndarray = None,
+        perms: int = 100,
+        exchangeable_errors: bool = True,
+        is_errors: bool = False,
+        ignore_repeat_rows: bool = False,
+        ignore_repeat_perms: bool = False,
+        return_variance_groups: bool = False,
 ):
     """
 
@@ -61,10 +61,11 @@ def quickperms(
         if exchangeability_blocks is None:
             raise ValueError("Cant both be empty")
         else:
-            n_subects = exchangeability_blocks.shape[0]
+            n_subjects = exchangeability_blocks.shape[0]
+            design_matrix = np.expand_dims(np.arange(n_subjects), 1)
     else:
         if exchangeability_blocks is None:
-            n_subects = design_matrix.shape[0]
+            n_subjects = design_matrix.shape[0]
         else:
             n_subjects = max(design_matrix.shape[0], exchangeability_blocks.shape[0])
 
