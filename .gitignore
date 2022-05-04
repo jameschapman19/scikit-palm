@@ -1,0 +1,3 @@
+# ignore pycache folder(s) and compiled python scripts anywhere in this repository
+**/__pycache__/
+*.pyc
